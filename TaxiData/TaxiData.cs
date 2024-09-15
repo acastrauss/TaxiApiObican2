@@ -44,29 +44,24 @@ namespace TaxiData
         }
 
         #region AuthMethods
-        public async Task<UserProfile> UpdateUserProfile(UpdateUserProfileRequest request, string partitionKey, string rowKey)
+        public async Task<UserProfile> UpdateUserProfile(UpdateUserProfileRequest request, Guid id)
         {
-            return await dataServiceFactory.AuthDataService.UpdateUserProfile(request, partitionKey, rowKey);
+            return await dataServiceFactory.AuthDataService.UpdateUserProfile(request, id);
         }
 
-        public async Task<UserProfile> GetUserProfile(string partitionKey, string rowKey)
+        public async Task<UserProfile> GetUserProfile(Guid id)
         {
-            return await dataServiceFactory.AuthDataService.GetUserProfile(partitionKey, rowKey);
+            return await dataServiceFactory.AuthDataService.GetUserProfile(id);
         }
 
-        public async Task<bool> Exists(string partitionKey, string rowKey)
+        public async Task<bool> ExistsWithPwd(string email, string password)
         {
-            return await dataServiceFactory.AuthDataService.Exists(partitionKey, rowKey);
-        } 
-
-        public async Task<bool> ExistsWithPwd(string partitionKey, string rowKey, string password)
-        {
-            return await dataServiceFactory.AuthDataService.ExistsWithPwd(partitionKey, rowKey, password);
+            return await dataServiceFactory.AuthDataService.ExistsWithPwd(email, password);
         }
 
-        public async Task<bool> ExistsSocialMediaAuth(string partitionKey, string rowKey)
+        public async Task<bool> ExistsSocialMediaAuth(string email)
         {
-            return await dataServiceFactory.AuthDataService.ExistsSocialMediaAuth(partitionKey, rowKey);
+            return await dataServiceFactory.AuthDataService.ExistsSocialMediaAuth(email);
         }
         public async Task<bool> CreateUser(UserProfile appModel)
         {
@@ -174,14 +169,14 @@ namespace TaxiData
         #endregion
 
         #region DriverMethods
-        public async Task<DriverStatus> GetDriverStatus(string driverEmail)
+        public async Task<DriverStatus> GetDriverStatus(Guid id)
         {
-            return await dataServiceFactory.DriverDataService.GetDriverStatus(driverEmail);
+            return await dataServiceFactory.DriverDataService.GetDriverStatus(id);
         }
 
-        public async Task<bool> UpdateDriverStatus(string driverEmail, DriverStatus status)
+        public async Task<bool> UpdateDriverStatus(Guid id, DriverStatus status)
         {
-            return await dataServiceFactory.DriverDataService.UpdateDriverStatus(driverEmail, status);
+            return await dataServiceFactory.DriverDataService.UpdateDriverStatus(id, status);
         }
 
         public async Task<IEnumerable<Models.UserTypes.Driver>> ListAllDrivers()
@@ -198,9 +193,9 @@ namespace TaxiData
             return await dataServiceFactory.RideDataService.CreateRide(ride);
         }
 
-        public async Task<Models.Ride.Ride> UpdateRide(UpdateRideRequest updateRide, string driverEmail)
+        public async Task<Models.Ride.Ride> UpdateRide(UpdateRideRequest updateRide, Guid driverId)
         {
-            return await dataServiceFactory.RideDataService.UpdateRide(updateRide, driverEmail);
+            return await dataServiceFactory.RideDataService.UpdateRide(updateRide, driverId);
         }
 
         public async Task<IEnumerable<Models.Ride.Ride>> GetRides(QueryRideParams? queryParams)
@@ -208,9 +203,9 @@ namespace TaxiData
             return await dataServiceFactory.RideDataService.GetRides(queryParams);    
         }
 
-        public async Task<Ride> GetRide(string clientEmail, long rideCreatedAtTimestamp)
+        public async Task<Ride> GetRide(Guid id)
         {
-            return await dataServiceFactory.RideDataService.GetRide(clientEmail, rideCreatedAtTimestamp);
+            return await dataServiceFactory.RideDataService.GetRide(id);
         }
         #endregion
 
@@ -220,9 +215,9 @@ namespace TaxiData
             return await dataServiceFactory.DriverRatingDataService.RateDriver(driverRating);
         }
 
-        public async Task<float> GetAverageRatingForDriver(string driverEmail)
+        public async Task<float> GetAverageRatingForDriver(Guid driverId)
         {
-            return await dataServiceFactory.DriverRatingDataService.GetAverageRatingForDriver(driverEmail);
+            return await dataServiceFactory.DriverRatingDataService.GetAverageRatingForDriver(driverId);
         }
 
         #endregion
