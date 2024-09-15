@@ -14,13 +14,7 @@ namespace Models.Ride
     public class UpdateRideRequest
     {
         [DataMember]
-        [Required]
-        [EmailAddress]
-        public string ClientEmail { get; set; }
-        
-        [DataMember]
-        [Required]
-        public long RideCreatedAtTimestamp { get; set; }
+        public Guid RideId { get; set; }
 
         [DataMember]
         [Required]

@@ -13,8 +13,6 @@ namespace Models.Ride
         [DataMember]
         public RideStatus? Status { get; set; }
         [DataMember]
-        public string? ClientEmail { get; set; }
-        [DataMember]
-        public string? DriverEmail { get; set; }
+        public Guid RideId { get; set; }
     }
 }

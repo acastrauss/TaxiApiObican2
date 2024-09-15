@@ -19,15 +19,17 @@ namespace Models.Ride
     public class Ride
     {
         [DataMember]
+        public Guid Id { get; set; }
+        [DataMember]
         public long CreatedAtTimestamp { get; set; }
         [DataMember]
         public string StartAddress { get; set; }
         [DataMember]
         public string EndAddress { get; set; }
         [DataMember]
-        public string ClientEmail { get; set; }
+        public Guid ClientId { get; set; }
         [DataMember]
-        public string? DriverEmail { get; set; }
+        public Guid? DriverId { get; set; }
         [DataMember]
         public RideStatus Status { get; set; }
         [DataMember]

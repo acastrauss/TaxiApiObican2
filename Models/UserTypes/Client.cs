@@ -1,5 +1,4 @@
 ﻿using Models.Auth;
-using Models.Ride;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,18 +8,9 @@ using System.Threading.Tasks;
 
 namespace Models.UserTypes
 {
-    public enum DriverStatus
-    {
-        NOT_VERIFIED = 0,
-        VERIFIED = 1,
-        BANNED = 2
-    }
-
     [DataContract]
-    public class Driver : UserProfile
+    public class Client : UserProfile
     {
-        [DataMember]
-        public DriverStatus Status { get; set; }
 
         [DataMember]
         public Guid Id { get; set; }
@@ -28,14 +18,14 @@ namespace Models.UserTypes
         [DataMember]
         public List<Models.Ride.Ride> Rides { get; set; }
 
-        public Driver() { }
+        public Client() { }
 
-        public Driver(UserProfile user, DriverStatus status)
+
+        public Client(UserProfile user)
         {
             this.Address = user.Address;
             this.Password = user.Password;
             this.Email = user.Email;
-            this.Status = status;
             this.Username = user.Username;
             this.DateOfBirth = user.DateOfBirth;
             this.Fullname = user.Fullname;

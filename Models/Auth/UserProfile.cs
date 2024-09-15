@@ -18,8 +18,12 @@ namespace Models.Auth
 
     [DataContract]
     [KnownType(typeof(Driver))]
+    [KnownType(typeof(Client))]
     public class UserProfile 
     {
+        [DataMember]
+        public Guid Id { get; set; }
+
         [DataMember]
         [Required]
         [MinLength(3)]

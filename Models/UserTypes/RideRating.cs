@@ -11,11 +11,8 @@ namespace Models.UserTypes
     public class RideRating
     {
         [DataMember]
-        public string ClientEmail { get; set; }
-        [DataMember]
-        public long RideTimestamp { get; set; }
-        [DataMember]
-        public string DriverEmail { get; set; }
+        public Guid RideId { get; set; }
+
         [DataMember]
         [System.ComponentModel.DataAnnotations.Range(1, 5)]
         public int Value { get; set; }
