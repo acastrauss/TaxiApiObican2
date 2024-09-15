@@ -16,12 +16,12 @@ namespace Contracts.Database
         Task<Models.Ride.Ride> CreateRide(Models.Ride.Ride ride);
 
         [OperationContract]
-        Task<Models.Ride.Ride> UpdateRide(Models.Ride.UpdateRideRequest updateRide, string driverEmail);
+        Task<Models.Ride.Ride> UpdateRide(Models.Ride.UpdateRideRequest updateRide, Guid driverId);
 
         [OperationContract]
         Task<IEnumerable<Models.Ride.Ride>> GetRides(Models.Ride.QueryRideParams? queryParams);
 
         [OperationContract]
-        Task<Ride> GetRide(string clientEmail, long rideCreatedAtTimestamp);
+        Task<Ride> GetRide(Guid id);
     }
 }

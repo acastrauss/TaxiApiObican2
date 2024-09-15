@@ -28,17 +28,17 @@ namespace TaxiData.DataServices
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
 
-            var dictKey = $"{ride.ClientEmail}{ride.CreatedAtTimestamp}";
+            var dictKey = $"{ride.Id}";
             var createdRide = await dict.AddOrUpdateAsync(txWrapper.transaction, dictKey, ride, (key, value) => value);
             return createdRide;
         }
 
-        public async Task<Models.Ride.Ride> UpdateRide(UpdateRideRequest updateRide, string driverEmail)
+        public async Task<Models.Ride.Ride> UpdateRide(UpdateRideRequest updateRide, Guid driverId)
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
 
-            var rideKey = $"{updateRide.ClientEmail}{updateRide.RideCreatedAtTimestamp}";
+            var rideKey = $"{updateRide.RideId}";
 
             var existing = await dict.TryGetValueAsync(txWrapper.transaction, rideKey);
 
@@ -51,7 +51,7 @@ namespace TaxiData.DataServices
 
             if (updateRide.Status == RideStatus.ACCEPTED && updateRide is UpdateRideWithTimeEstimate updateRideWithTime)
             {
-                existing.Value.DriverEmail = driverEmail;
+                existing.Value.DriverId = driverId;
                 existing.Value.EstimatedRideEnd = existing.Value.EstimatedDriverArrival.AddSeconds(updateRideWithTime.RideEstimateSeconds);
             }
 
@@ -76,8 +76,8 @@ namespace TaxiData.DataServices
                     if (queryParams != null)
                     {
                         bool shouldAdd = (queryParams.Status == null) || (queryParams.Status == rideEntity.Status);
-                        shouldAdd &= (queryParams.ClientEmail == null) || (queryParams.ClientEmail == rideEntity.ClientEmail);
-                        shouldAdd &= (queryParams.DriverEmail == null) || (queryParams.DriverEmail == rideEntity.DriverEmail);
+                        shouldAdd &= (queryParams.ClientId == null) || (queryParams.ClientId == rideEntity.ClientId);
+                        shouldAdd &= (queryParams.DriverId == null) || (queryParams.DriverId == rideEntity.DriverId);
                         if (shouldAdd)
                         {
                             rides.Add(rideEntity);
@@ -93,12 +93,12 @@ namespace TaxiData.DataServices
             return rides;
         }
 
-        public async Task<Ride> GetRide(string clientEmail, long rideCreatedAtTimestamp)
+        public async Task<Ride> GetRide(Guid id)
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
 
-            var existingRide = await dict.TryGetValueAsync(txWrapper.transaction, $"{clientEmail}{rideCreatedAtTimestamp}");
+            var existingRide = await dict.TryGetValueAsync(txWrapper.transaction, $"{id}");
 
             if (!existingRide.HasValue)
             {

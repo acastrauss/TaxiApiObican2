@@ -26,14 +26,13 @@ namespace TaxiData.DataServices
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
-
-            var key = $"{driverRating.DriverEmail}{driverRating.RideTimestamp}";
+            var key = $"{driverRating.Id}";
             var newRating = await dict.AddOrUpdateAsync(txWrapper.transaction, key, driverRating, (key, value) => value);
 
             return newRating;
         }
 
-        public async Task<float> GetAverageRatingForDriver(string driverEmail)
+        public async Task<float> GetAverageRatingForDriver(Guid driverId)
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
@@ -49,7 +48,7 @@ namespace TaxiData.DataServices
                 var ratingEntity = asyncEnum.Current.Value;
                 if (ratingEntity != null)
                 {
-                    if (ratingEntity.DriverEmail.Equals(driverEmail))
+                    if (ratingEntity.Id == id)
                     {
                         cnt += 1;
                         sum += ratingEntity.Value;

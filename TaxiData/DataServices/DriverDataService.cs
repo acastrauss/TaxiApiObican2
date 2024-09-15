@@ -23,12 +23,12 @@ namespace TaxiData.DataServices
         ) : base(storageWrapper, converter, synchronizer, stateManager)
         {}
 
-        public async Task<DriverStatus> GetDriverStatus(string driverEmail)
+        public async Task<DriverStatus> GetDriverStatus(Guid id)
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
 
-            var existingDriver = await dict.TryGetValueAsync(txWrapper.transaction, $"{UserType.DRIVER}{driverEmail}");
+            var existingDriver = await dict.TryGetValueAsync(txWrapper.transaction, $"{id}");
 
             if (!existingDriver.HasValue)
             {
@@ -38,18 +38,18 @@ namespace TaxiData.DataServices
             return existingDriver.Value.Status;
         }
 
-        public async Task<bool> UpdateDriverStatus(string driverEmail, DriverStatus status)
+        public async Task<bool> UpdateDriverStatus(Guid id, DriverStatus status)
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
-
-            var existingDriver = await dict.TryGetValueAsync(txWrapper.transaction, $"{UserType.DRIVER}{driverEmail}");
+            var key = $"{id}";
+            var existingDriver = await dict.TryGetValueAsync(txWrapper.transaction, key);
             if (!existingDriver.HasValue)
             {
                 return false;
             }
             existingDriver.Value.Status = status;
-            var result = await dict.TryUpdateAsync(txWrapper.transaction, $"{UserType.DRIVER}{driverEmail}", existingDriver.Value, existingDriver.Value);
+            var result = await dict.TryUpdateAsync(txWrapper.transaction, key, existingDriver.Value, existingDriver.Value);
             return result;
         }
 
@@ -80,7 +80,7 @@ namespace TaxiData.DataServices
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
-            var dictKey = $"{driver.Type}{driver.Email}";
+            var dictKey = $"{driver.Id}";
             var created = await dict.AddOrUpdateAsync(txWrapper.transaction, dictKey, driver, (key, value) => value);
             return created != null;
         }

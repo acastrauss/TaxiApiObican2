@@ -11,6 +11,9 @@ namespace Models.UserTypes
     public class RideRating
     {
         [DataMember]
+        public Guid Id { get; set; }
+
+        [DataMember]
         public Guid RideId { get; set; }
 
         [DataMember]

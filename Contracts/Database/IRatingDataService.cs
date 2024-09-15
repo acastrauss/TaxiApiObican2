@@ -16,6 +16,6 @@ namespace Contracts.Database
         Task<RideRating> RateDriver(RideRating driverRating);
 
         [OperationContract]
-        Task<float> GetAverageRatingForDriver(string driverEmail);
+        Task<float> GetAverageRatingForDriver(Guid driverId);
     }
 }

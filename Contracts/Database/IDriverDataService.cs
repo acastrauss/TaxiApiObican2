@@ -16,10 +16,10 @@ namespace Contracts.Database
         Task<bool> CreateDriver(Driver appModel);
 
         [OperationContract]
-        Task<DriverStatus> GetDriverStatus(string driverEmail);
+        Task<DriverStatus> GetDriverStatus(Guid id);
 
         [OperationContract]
-        Task<bool> UpdateDriverStatus(string driverEmail, DriverStatus status);
+        Task<bool> UpdateDriverStatus(Guid id, DriverStatus status);
 
         [OperationContract]
         Task<IEnumerable<Driver>> ListAllDrivers();
