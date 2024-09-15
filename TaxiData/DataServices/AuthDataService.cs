@@ -24,11 +24,11 @@ namespace TaxiData.DataServices
             : base(storageWrapper, converter, synchronizer, stateManager)
         {}
 
-        public async Task<UserProfile> UpdateUserProfile(UpdateUserProfileRequest request, string partitionKey, string rowKey)
+        public async Task<UserProfile> UpdateUserProfile(UpdateUserProfileRequest request, Guid id)
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
-            var key = $"{partitionKey}{rowKey}";
+            var key = $"{id}";
             var existing = await dict.TryGetValueAsync(txWrapper.transaction, key);
 
             if (!existing.HasValue)
@@ -66,44 +66,55 @@ namespace TaxiData.DataServices
             return updated ? existing.Value : null;
         }
     
-        public async Task<UserProfile> GetUserProfile(string partitionKey, string rowKey)
+        public async Task<UserProfile> GetUserProfile(Guid id)
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
-            var existing = await dict.TryGetValueAsync(txWrapper.transaction, $"{partitionKey}{rowKey}");
+            var existing = await dict.TryGetValueAsync(txWrapper.transaction, $"{id}");
             return existing.Value;
         }
 
-        public async Task<bool> Exists(string partitionKey, string rowKey)
-        {
-            var userProfile = await GetUserProfile(partitionKey, rowKey);
-            return userProfile != null;
-        }
-
-        public async Task<bool> ExistsWithPwd(string partitionKey, string rowKey, string password)
+        public async Task<bool> ExistsWithPwd(string email, string password)
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
-            var existing = await dict.TryGetValueAsync(txWrapper.transaction, $"{partitionKey}{rowKey}");
-            if (existing.HasValue)
+            var collectionEnum = await dict.CreateEnumerableAsync(txWrapper.transaction);
+            var asyncEnum = collectionEnum.GetAsyncEnumerator();
+
+            while (await asyncEnum.MoveNextAsync(default))
             {
-                return existing.Value.Password.Equals(password) &&
-                    existing.Value.Email.Equals(rowKey) &&
-                    existing.Value.Type.ToString().Equals(partitionKey);
+                var user = asyncEnum.Current.Value;
+                if(user != null)
+                {
+                    if (user.Email == email && user.Password == password)
+                    {
+                        return true;
+                    } 
+                }
             }
+
             return false;
         }
 
-        public async Task<bool> ExistsSocialMediaAuth(string partitionKey, string rowKey)
+        public async Task<bool> ExistsSocialMediaAuth(string email)
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
-            var existing = await dict.TryGetValueAsync(txWrapper.transaction, $"{partitionKey}{rowKey}");
-            if (existing.HasValue)
+            var collectionEnum = await dict.CreateEnumerableAsync(txWrapper.transaction);
+            var asyncEnum = collectionEnum.GetAsyncEnumerator();
+
+            while (await asyncEnum.MoveNextAsync(default))
             {
-                return existing.Value.Email.Equals(rowKey) &&
-                    existing.Value.Type.ToString().Equals(partitionKey);
+                var user = asyncEnum.Current.Value;
+                if (user != null)
+                {
+                    if (user.Email == email)
+                    {
+                        return true;
+                    }
+                }
             }
+
             return false;
         }
 
@@ -111,7 +122,7 @@ namespace TaxiData.DataServices
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
-            var dictKey = $"{appModel.Type}{appModel.Email}";
+            var dictKey = $"{appModel.Id}";
             var created = await dict.AddOrUpdateAsync(txWrapper.transaction, dictKey, appModel, (key, value) => value);
             return created != null;
         }

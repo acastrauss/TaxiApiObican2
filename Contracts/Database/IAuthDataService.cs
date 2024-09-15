@@ -14,21 +14,19 @@ namespace Contracts.Database
     public interface IAuthDataService : IService
     {
         [OperationContract]
-        Task<bool> Exists(string partitionKey, string rowKey);
+        Task<bool> ExistsWithPwd(string email, string password);
 
         [OperationContract]
-        Task<bool> ExistsWithPwd(string partitionKey, string rowKey, string password);
+        Task<bool> ExistsSocialMediaAuth(string email);
 
         [OperationContract]
-        Task<Models.Auth.UserProfile> GetUserProfile(string partitionKey, string rowKey);
+        Task<Models.Auth.UserProfile> GetUserProfile(Guid id);
 
         [OperationContract]
-        Task<Models.Auth.UserProfile> UpdateUserProfile(UpdateUserProfileRequest request, string partitionKey, string rowKey);
+        Task<Models.Auth.UserProfile> UpdateUserProfile(UpdateUserProfileRequest request, Guid id);
 
         [OperationContract]
         Task<bool> CreateUser(UserProfile appModel);
 
-        [OperationContract]
-        Task<bool> ExistsSocialMediaAuth(string partitionKey, string rowKey);
     }
 }
