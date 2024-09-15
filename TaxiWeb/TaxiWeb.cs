@@ -20,6 +20,8 @@ using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using TaxiWeb.ConfigModels;
 using TaxiWeb.Services;
+using Microsoft.EntityFrameworkCore;
+using DatabaseAccess.Context;
 
 namespace TaxiWeb
 {
@@ -91,6 +93,16 @@ namespace TaxiWeb
 
                         var azureConnString = builder.Configuration.GetSection("AzureStorage").GetValue<string>("ConnectionString");
                         builder.Services.AddSingleton<Contracts.Blob.IBlob>(new AzureInterface.AzureBlobCRUD(azureConnString, "profile-images"));
+
+
+
+                        var mssqlConnectionString = builder.Configuration.GetConnectionString("SqlServer");
+                        Action<DbContextOptionsBuilder> dbOptionsBuilder = o => o
+                            .UseLazyLoadingProxies()
+                            .UseSqlServer(mssqlConnectionString);
+                        builder.Services.AddDbContext<TaxiDBContext>(dbOptionsBuilder);
+                        var dataContext = builder.Services.BuildServiceProvider().GetRequiredService<TaxiDBContext>();
+                        dataContext.Database.EnsureCreated();
 
                         builder.Services.AddSingleton<StatelessServiceContext>(serviceContext);
                         

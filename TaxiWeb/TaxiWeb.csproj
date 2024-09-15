@@ -13,6 +13,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.31" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.20" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />
     <PackageReference Include="Microsoft.ServiceFabric.AspNetCore.Kestrel" Version="7.1.2175" />
     <PackageReference Include="Microsoft.ServiceFabric.Services.Remoting" Version="7.1.2175" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.7.0" />
@@ -24,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AzureInterface\AzureInterface.csproj" />
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\DatabaseAccess\DatabaseAccess.csproj" />
   </ItemGroup>
 
 </Project>

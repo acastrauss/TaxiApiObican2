@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BussinesLogic", "BussinesLo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureInterface", "AzureInterface\AzureInterface.csproj", "{715AA9B2-45FF-4AF2-8168-F38520ECD6AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseAccess", "DatabaseAccess\DatabaseAccess.csproj", "{C33B277E-E047-4C46-8C61-C55ED6418CBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,14 @@ Global
 		{715AA9B2-45FF-4AF2-8168-F38520ECD6AE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{715AA9B2-45FF-4AF2-8168-F38520ECD6AE}.Release|x64.ActiveCfg = Release|Any CPU
 		{715AA9B2-45FF-4AF2-8168-F38520ECD6AE}.Release|x64.Build.0 = Release|Any CPU
+		{C33B277E-E047-4C46-8C61-C55ED6418CBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C33B277E-E047-4C46-8C61-C55ED6418CBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C33B277E-E047-4C46-8C61-C55ED6418CBA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C33B277E-E047-4C46-8C61-C55ED6418CBA}.Debug|x64.Build.0 = Debug|Any CPU
+		{C33B277E-E047-4C46-8C61-C55ED6418CBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C33B277E-E047-4C46-8C61-C55ED6418CBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C33B277E-E047-4C46-8C61-C55ED6418CBA}.Release|x64.ActiveCfg = Release|Any CPU
+		{C33B277E-E047-4C46-8C61-C55ED6418CBA}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
