@@ -1,5 +1,4 @@
-﻿using AzureInterface;
-using AzureInterface.DTO;
+﻿using DatabaseAccess.Entities;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Models.Auth;
@@ -13,10 +12,10 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal class DriverDataService : BaseDataService<Models.UserTypes.Driver, AzureInterface.Entities.Driver>, Contracts.Database.IDriverDataService
+    internal class DriverDataService : BaseDataService<Models.UserTypes.Driver,DriverEntity>, Contracts.Database.IDriverDataService
     {
         public DriverDataService(
-            Synchronizer<AzureInterface.Entities.Driver, Models.UserTypes.Driver> synchronizer,
+            Synchronizer<DriverEntity, Models.UserTypes.Driver> synchronizer,
             IReliableStateManager stateManager
         ) : base(synchronizer, stateManager)
         {}

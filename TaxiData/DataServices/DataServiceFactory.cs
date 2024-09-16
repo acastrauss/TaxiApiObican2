@@ -1,4 +1,5 @@
 ﻿using Contracts.SQLDB;
+using DatabaseAccess.DTO;
 using DatabaseAccess.Entities;
 using Microsoft.ServiceFabric.Data;
 using Models;
@@ -15,6 +16,8 @@ namespace TaxiData.DataServices
     {
         public AuthDataService AuthDataService { get; private set; }
         public DriverDataService DriverDataService { get; private set; }
+        public AdminDataService AdminDataService { get; private set; }
+        public ClientDataService ClientDataService { get; private set; }
         public RideDataService RideDataService { get; private set; }
         public RatingDataService DriverRatingDataService { get; private set; }
 
@@ -28,52 +31,55 @@ namespace TaxiData.DataServices
             ISQLCRUD<RatingEntity> ratingSql
         ) 
         {
-            var userDto = new UserDTO();
             AuthDataService = new AuthDataService(
-                userStorageWrapper,
-                userDto,
-                new DataImplementations.Synchronizer<User, Models.Auth.UserProfile>(
-                    userStorageWrapper, 
+                new DataImplementations.Synchronizer<UserEntity, Models.Auth.UserProfile>(
+                    userSql, 
                     typeof(UserProfile).Name, 
-                    userDto, 
+                    new UserDTO(), 
                     stateManager
                 ),
                 stateManager
             );
-            var driverDto = new DriverDTO();
             DriverDataService = new DriverDataService(
-                driverStorageWrapper,
-                driverDto,
-                new DataImplementations.Synchronizer<Driver, Models.UserTypes.Driver>(
-                    driverStorageWrapper,
-                    typeof(Driver).Name,
-                    driverDto,
+                new DataImplementations.Synchronizer<DriverEntity, Models.UserTypes.Driver>(
+                    driverSql,
+                    typeof(Models.UserTypes.Driver).Name,
+                    new DriverDTO(),
                     stateManager
                 ),
                 stateManager
             );
+            AdminDataService = new AdminDataService(
+                new DataImplementations.Synchronizer<AdminEntity, Models.UserTypes.Admin>(
+                    adminSql,
+                    typeof(Models.UserTypes.Admin).Name,
+                    new AdminDTO(),
+                    stateManager
+                    ),
+                stateManager
+            );
+            ClientDataService = new ClientDataService(
+                new DataImplementations.Synchronizer<ClientEntity, Models.UserTypes.Client>(
+                    clientSql, typeof(Models.UserTypes.Client).Name, new ClientDTO(), stateManager
+                    ),
+                stateManager
+            );
 
-            var rideDto = new RideDTO();
             RideDataService = new RideDataService(
-                rideStorageWrapper,
-                rideDto,
-                new DataImplementations.Synchronizer<Ride, Models.Ride.Ride>(
-                    rideStorageWrapper,
-                    typeof(Ride).Name,
-                    rideDto,
+                new DataImplementations.Synchronizer<RideEntity, Models.Ride.Ride>(
+                    rideSql,
+                    typeof(Models.Ride.Ride).Name,
+                    new RideDTO(),
                     stateManager
                 ),
                 stateManager
             );
 
-            var driverRatingDto = new DriverRatingDTO();
             DriverRatingDataService = new RatingDataService(
-                driverRatingStorageWrapper,
-                driverRatingDto,
-                new DataImplementations.Synchronizer<RideRating, Models.UserTypes.RideRating>(
-                    driverRatingStorageWrapper,
-                    typeof(RideRating).Name,
-                    driverRatingDto,
+                new DataImplementations.Synchronizer<RatingEntity, Models.UserTypes.RideRating>(
+                    ratingSql,
+                    typeof(Models.UserTypes.RideRating).Name,
+                    new RatingDTO(),
                     stateManager
                 ),
                 stateManager

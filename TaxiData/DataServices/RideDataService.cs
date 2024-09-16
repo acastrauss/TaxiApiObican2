@@ -1,6 +1,5 @@
 ﻿
-using AzureInterface;
-using AzureInterface.DTO;
+using DatabaseAccess.Entities;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Models.Ride;
@@ -13,10 +12,10 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal class RideDataService : BaseDataService<Models.Ride.Ride, AzureInterface.Entities.Ride>, Contracts.Database.IRideDataService
+    internal class RideDataService : BaseDataService<Models.Ride.Ride, RideEntity>, Contracts.Database.IRideDataService
     {
         public RideDataService(
-            Synchronizer<AzureInterface.Entities.Ride, Models.Ride.Ride> synchronizer, 
+            Synchronizer<RideEntity, Models.Ride.Ride> synchronizer, 
             IReliableStateManager stateManager) : 
             base(synchronizer, stateManager)
         {}

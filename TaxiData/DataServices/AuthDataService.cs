@@ -1,6 +1,5 @@
-﻿using AzureInterface;
-using AzureInterface.DTO;
-using AzureInterface.Entities;
+﻿using AzureInterface.Entities;
+using DatabaseAccess.Entities;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Models.Auth;
@@ -13,10 +12,10 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal class AuthDataService : BaseDataService<Models.Auth.UserProfile, AzureInterface.Entities.User>, Contracts.Database.IAuthDataService
+    internal class AuthDataService : BaseDataService<Models.Auth.UserProfile, UserEntity>, Contracts.Database.IAuthDataService
     {
         public AuthDataService(
-            Synchronizer<User, UserProfile> synchronizer,
+            Synchronizer<UserEntity, UserProfile> synchronizer,
             IReliableStateManager stateManager
         )
             : base(synchronizer, stateManager)

@@ -1,5 +1,4 @@
-﻿using AzureInterface;
-using AzureInterface.DTO;
+﻿using DatabaseAccess.Entities;
 using Microsoft.ServiceFabric.Data;
 using System;
 using System.Collections.Generic;
@@ -10,10 +9,10 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal class RatingDataService : BaseDataService<Models.UserTypes.RideRating, AzureInterface.Entities.RideRating>, Contracts.Database.IRatingDataService
+    internal class RatingDataService : BaseDataService<Models.UserTypes.RideRating, RatingEntity>, Contracts.Database.IRatingDataService
     {
         public RatingDataService(
-            Synchronizer<AzureInterface.Entities.RideRating, 
+            Synchronizer<RatingEntity, 
             Models.UserTypes.RideRating> synchronizer, 
             IReliableStateManager stateManager
         ) : base(synchronizer, stateManager)

@@ -2,6 +2,7 @@
 using AzureInterface;
 using AzureInterface.DTO;
 using AzureInterface.Entities;
+using Contracts.SQLDB;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Models;
@@ -15,7 +16,7 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal abstract class BaseDataService<T1, T2> where T1 : class where T2 : class, ITableEntity
+    internal abstract class BaseDataService<T1, T2> where T1 : class where T2 : class, BaseEntity
     {
         protected readonly Synchronizer<T2, T1> synchronizer;
         protected readonly IReliableStateManager stateManager;
