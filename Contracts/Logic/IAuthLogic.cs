@@ -14,7 +14,7 @@ namespace Contracts.Logic
     public interface IAuthLogic : IService
     {
         [OperationContract]
-        Task<Tuple<bool, UserType>> Login(LoginData loginData);
+        Task<LoginResponse> Login(LoginData loginData);
         [OperationContract]
         Task<bool> Register(UserProfile userProfile);
         [OperationContract]

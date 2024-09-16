@@ -71,7 +71,7 @@ namespace TaxiData.DataServices
             return existing.Value;
         }
 
-        public async Task<bool> ExistsWithPwd(string email, string password)
+        public async Task<UserProfile> ExistsWithPwd(string email, string password)
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
@@ -85,15 +85,15 @@ namespace TaxiData.DataServices
                 {
                     if (user.Email == email && user.Password == password)
                     {
-                        return true;
+                        return user;
                     } 
                 }
             }
 
-            return false;
+            return null;
         }
 
-        public async Task<bool> ExistsOnlyEmail(string email)
+        public async Task<UserProfile> ExistsOnlyEmail(string email)
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
@@ -107,12 +107,12 @@ namespace TaxiData.DataServices
                 {
                     if (user.Email == email)
                     {
-                        return true;
+                        return user;
                     }
                 }
             }
 
-            return false;
+            return null;
         }
 
         public async Task<bool> Create(UserProfile appModel)

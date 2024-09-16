@@ -9,8 +9,9 @@ namespace TaxiWeb.Services
         {
             var userEmailClaim = httpContext.User.Claims.FirstOrDefault((c) => c.Type == ClaimTypes.Email);
             var userTypeClaim = httpContext.User.Claims.FirstOrDefault((c) => c.Type == ClaimTypes.Role);
+            var userIdClaim = httpContext.User.Claims.FirstOrDefault((c) => c.Type == ClaimTypes.NameIdentifier);
 
-            if (userEmailClaim == null || userTypeClaim == null)
+            if (userEmailClaim == null || userTypeClaim == null || userIdClaim == null)
             {
                 return false;
             }
@@ -34,6 +35,12 @@ namespace TaxiWeb.Services
         {
             var userEmailClaim = httpContext.User.Claims.FirstOrDefault((c) => c.Type == ClaimTypes.Email);
             return userEmailClaim?.Value;
+        }
+
+        public Guid? GetUserIdFromContext(HttpContext httpContext)
+        {
+            var userIdClaim = httpContext.User.Claims.FirstOrDefault((c) => c.Type == ClaimTypes.NameIdentifier);
+            return userIdClaim != null ? new Guid(userIdClaim.Value) : null;
         }
 
         public UserType? GetUserTypeFromContext(HttpContext httpContext)

@@ -7,5 +7,6 @@ namespace TaxiWeb.Services
         bool DoesUserHaveRightsToAccessResource(HttpContext httpContext, UserType[] allowedUserTypes);
         string? GetUserEmailFromContext(HttpContext httpContext); 
         UserType? GetUserTypeFromContext(HttpContext httpContext);
+        Guid? GetUserIdFromContext(HttpContext httpContext);
     }
 }

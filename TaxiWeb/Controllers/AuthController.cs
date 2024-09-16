@@ -43,15 +43,14 @@ namespace TaxiWeb.Controllers
         [Route("profile")]
         public async Task<IActionResult> GetUserProfile()
         {
-            var userEmail = requestAuth.GetUserEmailFromContext(HttpContext);
-            var userType = requestAuth.GetUserTypeFromContext(HttpContext);
+            var userId = requestAuth.GetUserIdFromContext(HttpContext);
 
-            if (userEmail == null || userType == null)
+            if (userId == null)
             {
                 return BadRequest("Invalid JWT");
             }
 
-            return Ok(await authService.GetUserProfile(userEmail, (UserType)userType));
+            return Ok(await authService.GetUserProfile(userId);
         }
 
         [HttpPatch]
@@ -59,15 +58,14 @@ namespace TaxiWeb.Controllers
         [Route("update-profile")]
         public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserProfileRequest updateProfileRequest)
         {
-            var userEmail = requestAuth.GetUserEmailFromContext(HttpContext);
-            var userType = requestAuth.GetUserTypeFromContext(HttpContext);
+            var userId = requestAuth.GetUserIdFromContext(HttpContext);
 
-            if (userEmail == null || userType == null)
+            if (userId == null)
             {
                 return BadRequest("Invalid JWT");
             }
 
-            return Ok(await authService.UpdateUserProfile(updateProfileRequest, userEmail, (UserType)userType));
+            return Ok(await authService.UpdateUserProfile(updateProfileRequest, userId));
         }
 
         // POST api/<AuthController>/register
@@ -90,9 +88,9 @@ namespace TaxiWeb.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginData loginData)
         {
-            var userExists = await authService.Login(loginData);
+            var existingUser = await authService.Login(loginData);
 
-            if (!userExists.Item1) 
+            if (existingUser == null) 
             {
                 return BadRequest();
             }
@@ -104,7 +102,8 @@ namespace TaxiWeb.Controllers
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Email, loginData.Email), 
-                    new Claim(ClaimTypes.Role, userExists.Item2.ToString()) 
+                    new Claim(ClaimTypes.Role, existingUser.userType.ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, existingUser.userId.ToString())
                 }),
                 Expires = DateTime.Now.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),

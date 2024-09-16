@@ -15,5 +15,7 @@ namespace Contracts.Logic
 {
     [ServiceContract]
     public interface IBussinesLogic : IAuthLogic, IDriverLogic, IRideLogic, IEmailService, IRatingLogic
-    {}
+    {
+        Task<object?> UpdateUserProfile(UpdateUserProfileRequest updateProfileRequest, Guid? v);
+    }
 }

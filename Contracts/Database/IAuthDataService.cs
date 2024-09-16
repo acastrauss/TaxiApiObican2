@@ -14,10 +14,10 @@ namespace Contracts.Database
     public interface IAuthDataService : IService
     {
         [OperationContract]
-        Task<bool> ExistsWithPwd(string email, string password);
+        Task<UserProfile> ExistsWithPwd(string email, string password);
 
         [OperationContract]
-        Task<bool> ExistsOnlyEmail(string email);
+        Task<UserProfile> ExistsOnlyEmail(string email);
 
         [OperationContract]
         Task<Models.Auth.UserProfile> GetUserProfile(Guid id);

@@ -21,28 +21,32 @@ namespace BussinesLogic.Implementations
             return await dbService.GetUserProfile(id);
         }
 
-        public async Task<Tuple<bool, UserType>> Login(LoginData loginData)
+        public async Task<LoginResponse> Login(LoginData loginData)
         {
-            bool exists = false;
+            UserProfile existingUser = null;
             foreach (UserType type in Enum.GetValues(typeof(UserType)))
             {
                 if (loginData.authType == AuthType.TRADITIONAL)
                 {
-                    exists |= await dbService.ExistsWithPwd(loginData.Email, loginData.Password);
+                    existingUser = await dbService.ExistsWithPwd(loginData.Email, loginData.Password);
                 }
                 // Google Auth
                 else
                 {
-                    exists |= await dbService.ExistsOnlyEmail(loginData.Email);
+                    existingUser = await dbService.ExistsOnlyEmail(loginData.Email);
                 }
 
-                if (exists)
+                if (existingUser != null)
                 {
-                    return Tuple.Create(exists, type);
+                    return new LoginResponse()
+                    {
+                        userId = existingUser.Id,
+                        userType = existingUser.Type
+                    };
                 }
             }
 
-            return Tuple.Create<bool, UserType>(exists, default);
+            return null;
         }
 
         public async Task<bool> Register(UserProfile userProfile)
