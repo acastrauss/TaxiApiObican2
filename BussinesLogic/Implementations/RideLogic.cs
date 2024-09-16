@@ -16,7 +16,7 @@ namespace BussinesLogic.Implementations
             this.dbService = dbService;
         }
 
-        public async Task<Ride> CreateRide(CreateRideRequest request, string clientEmail)
+        public async Task<Ride> CreateRide(CreateRideRequest request, Guid clientId)
         {
             var now = DateTime.UtcNow;
             now = DateTime.SpecifyKind(now, DateTimeKind.Utc);
@@ -24,9 +24,9 @@ namespace BussinesLogic.Implementations
 
             var newRide = new Models.Ride.Ride()
             {
-                ClientEmail = clientEmail,
+                ClientId = clientId,
                 CreatedAtTimestamp = unixTimestamp,
-                DriverEmail = null,
+                DriverId = null,
                 EndAddress = request.EndAddress,
                 StartAddress = request.StartAddress,
                 Price = request.Price,
@@ -63,12 +63,12 @@ namespace BussinesLogic.Implementations
             });
         }
 
-        public async Task<Ride> GetRideStatus(string clientEmail, long rideCreatedAtTimestamp)
+        public async Task<Ride> GetRideStatus(Guid id)
         {
-            return await dbService.GetRide(clientEmail, rideCreatedAtTimestamp);
+            return await dbService.GetRide(id);
         }
 
-        public async Task<IEnumerable<Ride>> GetUsersRides(string userEmail, UserType userType)
+        public async Task<IEnumerable<Ride>> GetUsersRides(Guid userId, UserType userType)
         {
             switch (userType)
             {
@@ -79,7 +79,7 @@ namespace BussinesLogic.Implementations
                         {
                             var rides = await dbService.GetRides(new QueryRideParams()
                             {
-                                ClientEmail = userEmail,
+                                ClientId = userId,
                                 Status = RideStatus.COMPLETED
                             });
                             clientRides.AddRange(rides);
@@ -89,7 +89,7 @@ namespace BussinesLogic.Implementations
                 case UserType.DRIVER:
                     return await dbService.GetRides(new QueryRideParams()
                     {
-                        DriverEmail = userEmail,
+                        DriverId = userId,
                         Status = RideStatus.COMPLETED
                     });
                 case UserType.ADMIN:
@@ -98,7 +98,7 @@ namespace BussinesLogic.Implementations
             }
         }
 
-        public async Task<Ride> UpdateRide(UpdateRideRequest request, string driverEmail)
+        public async Task<Ride> UpdateRide(UpdateRideRequest request, Guid driverId)
         {
             // Driver accepted the ride
             if (request.Status == RideStatus.ACCEPTED)
@@ -107,16 +107,15 @@ namespace BussinesLogic.Implementations
 
                 var rideWithTimeEstimate = new Models.Ride.UpdateRideWithTimeEstimate()
                 {
-                    ClientEmail = request.ClientEmail,
-                    RideCreatedAtTimestamp = request.RideCreatedAtTimestamp,
+                    RideId = request.RideId,
                     Status = request.Status,
                     RideEstimateSeconds = randomGen.Next(60)
                 };
 
-                return await dbService.UpdateRide(rideWithTimeEstimate, driverEmail);
+                return await dbService.UpdateRide(rideWithTimeEstimate, driverId);
             }
 
-            return await dbService.UpdateRide(request, driverEmail);
+            return await dbService.UpdateRide(request, driverId);
         }
     }
 }

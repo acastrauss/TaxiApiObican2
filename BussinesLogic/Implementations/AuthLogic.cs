@@ -16,9 +16,9 @@ namespace BussinesLogic.Implementations
             this.dbService = dbService;
         }
 
-        public async Task<UserProfile> GetUserProfile(string userEmail, UserType userType)
+        public async Task<UserProfile> GetUserProfile(Guid id)
         {
-            return await dbService.GetUserProfile(userType.ToString(), userEmail);
+            return await dbService.GetUserProfile(id);
         }
 
         public async Task<Tuple<bool, UserType>> Login(LoginData loginData)
@@ -28,12 +28,12 @@ namespace BussinesLogic.Implementations
             {
                 if (loginData.authType == AuthType.TRADITIONAL)
                 {
-                    exists |= await dbService.ExistsWithPwd(type.ToString(), loginData.Email, loginData.Password);
+                    exists |= await dbService.ExistsWithPwd(loginData.Email, loginData.Password);
                 }
                 // Google Auth
                 else
                 {
-                    exists |= await dbService.ExistsSocialMediaAuth(type.ToString(), loginData.Email);
+                    exists |= await dbService.ExistsOnlyEmail(loginData.Email);
                 }
 
                 if (exists)
@@ -50,7 +50,7 @@ namespace BussinesLogic.Implementations
             var userExists = false;
             foreach (UserType type in Enum.GetValues(typeof(UserType)))
             {
-                userExists |= await dbService.Exists(type.ToString(), userProfile.Email);
+                userExists |= await dbService.ExistsOnlyEmail(userProfile.Email);
             }
 
             if (userExists)
@@ -67,9 +67,9 @@ namespace BussinesLogic.Implementations
             return await dbService.CreateUser(userProfile);
         }
 
-        public async Task<UserProfile> UpdateUserProfile(UpdateUserProfileRequest updateUserProfileRequest, string userEmail, UserType userType)
+        public async Task<UserProfile> UpdateUserProfile(UpdateUserProfileRequest updateUserProfileRequest, Guid id)
         {
-            return await dbService.UpdateUserProfile(updateUserProfileRequest, userType.ToString(), userEmail);
+            return await dbService.UpdateUserProfile(updateUserProfileRequest, id);
         }
     }
 }

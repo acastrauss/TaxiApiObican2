@@ -17,7 +17,7 @@ namespace Contracts.Database
         Task<bool> ExistsWithPwd(string email, string password);
 
         [OperationContract]
-        Task<bool> ExistsSocialMediaAuth(string email);
+        Task<bool> ExistsOnlyEmail(string email);
 
         [OperationContract]
         Task<Models.Auth.UserProfile> GetUserProfile(Guid id);

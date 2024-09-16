@@ -93,7 +93,7 @@ namespace TaxiData.DataServices
             return false;
         }
 
-        public async Task<bool> ExistsSocialMediaAuth(string email)
+        public async Task<bool> ExistsOnlyEmail(string email)
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());

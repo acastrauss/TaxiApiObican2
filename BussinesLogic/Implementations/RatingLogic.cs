@@ -17,20 +17,13 @@ namespace BussinesLogic.Implementations
             this.dbService = dbService;
             this.rideLogic = rideLogic;
         }    
-        public async Task<float> GetAverageRatingForDriver(string driverEmail)
+        public async Task<float> GetAverageRatingForDriver(Guid id)
         {
-            return await dbService.GetAverageRatingForDriver(driverEmail);
+            return await dbService.GetAverageRatingForDriver(id);
         }
 
         public async Task<RideRating> RateDriver(RideRating driverRating)
         {
-            var userRides = await rideLogic.GetUsersRides(driverRating.ClientEmail, UserType.CLIENT);
-            var userHasThisRide = userRides.Any((ride) => ride.CreatedAtTimestamp == driverRating.RideTimestamp);
-            if (!userHasThisRide)
-            {
-                return null;
-            }
-
             return await dbService.RateDriver(driverRating);
         }
     }

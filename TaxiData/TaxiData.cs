@@ -59,9 +59,9 @@ namespace TaxiData
             return await dataServiceFactory.AuthDataService.ExistsWithPwd(email, password);
         }
 
-        public async Task<bool> ExistsSocialMediaAuth(string email)
+        public async Task<bool> ExistsOnlyEmail(string email)
         {
-            return await dataServiceFactory.AuthDataService.ExistsSocialMediaAuth(email);
+            return await dataServiceFactory.AuthDataService.ExistsOnlyEmail(email);
         }
         public async Task<bool> CreateUser(UserProfile appModel)
         {

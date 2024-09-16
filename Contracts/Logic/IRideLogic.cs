@@ -17,21 +17,21 @@ namespace Contracts.Logic
         Task<EstimateRideResponse> EstimateRide(EstimateRideRequest request);
 
         [OperationContract]
-        Task<Ride> CreateRide(CreateRideRequest request, string clientEmail);
+        Task<Ride> CreateRide(CreateRideRequest request, Guid clientId);
 
         [OperationContract]
-        Task<Ride> UpdateRide(UpdateRideRequest request, string driverEmail);
+        Task<Ride> UpdateRide(UpdateRideRequest request, Guid driverId);
 
         [OperationContract]
         Task<IEnumerable<Ride>> GetNewRides();
 
         [OperationContract]
-        Task<IEnumerable<Ride>> GetUsersRides(string userEmail, UserType userType);
+        Task<IEnumerable<Ride>> GetUsersRides(Guid userId, UserType userType);
 
         [OperationContract]
         Task<IEnumerable<Ride>> GetAllRides();
 
         [OperationContract]
-        Task<Ride> GetRideStatus(string clientEmail, long rideCreatedAtTimestamp);
+        Task<Ride> GetRideStatus(Guid id);
     }
 }

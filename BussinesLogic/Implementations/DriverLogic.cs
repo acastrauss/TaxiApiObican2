@@ -18,9 +18,9 @@ namespace BussinesLogic.Implementations
             this.dbService = dbService;
         }
 
-        public async Task<DriverStatus> GetDriverStatus(string driverEmail)
+        public async Task<DriverStatus> GetDriverStatus(Guid id)
         {
-            return await dbService.GetDriverStatus(driverEmail);
+            return await dbService.GetDriverStatus(id);
         }
 
         public async Task<IEnumerable<Driver>> ListAllDrivers()
@@ -28,9 +28,9 @@ namespace BussinesLogic.Implementations
             return await dbService.ListAllDrivers();
         }
 
-        public async Task<bool> UpdateDriverStatus(string driverEmail, DriverStatus status)
+        public async Task<bool> UpdateDriverStatus(Guid id, DriverStatus status)
         {
-            return await dbService.UpdateDriverStatus(driverEmail, status);
+            return await dbService.UpdateDriverStatus(id, status);
         }
     }
 }
