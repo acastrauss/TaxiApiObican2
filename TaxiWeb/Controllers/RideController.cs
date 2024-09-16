@@ -54,7 +54,6 @@ namespace TaxiWeb.Controllers
             }
 
             request.Id = new Guid();
-
             var res = await authService.CreateRide(request, (Guid)userId);
 
             if (res == null) 

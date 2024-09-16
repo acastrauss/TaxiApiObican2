@@ -23,5 +23,8 @@ namespace Contracts.Database
 
         [OperationContract]
         Task<IEnumerable<Driver>> ListAllDrivers();
+
+        [OperationContract]
+        Task<float> GetAverageRatingForDriver(Guid driverId);
     }
 }

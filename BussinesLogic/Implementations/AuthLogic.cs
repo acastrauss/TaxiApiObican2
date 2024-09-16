@@ -65,11 +65,14 @@ namespace BussinesLogic.Implementations
             if (userProfile.Type == UserType.DRIVER)
             {
                 var newDriver = new Models.UserTypes.Driver(userProfile, Models.UserTypes.DriverStatus.NOT_VERIFIED);
+                newDriver.DriverId = new Guid();
                 return await dbService.CreateDriver(newDriver);
             }
             else if (userProfile.Type == UserType.CLIENT) 
             {
-                return await dbService.CreateClient(new Models.UserTypes.Client(userProfile));
+                var newClient = new Models.UserTypes.Client(userProfile);
+                newClient.ClientId = new Guid();
+                return await dbService.CreateClient(newClient);
             }
 
             return await dbService.CreateUser(userProfile);

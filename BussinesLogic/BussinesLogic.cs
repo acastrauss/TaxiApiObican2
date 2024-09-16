@@ -49,14 +49,14 @@ namespace BussinesLogic
 
         #region DriverMethods
 
-        public async Task<DriverStatus> GetDriverStatus(string driverEmail)
+        public async Task<DriverStatus> GetDriverStatus(Guid id)
         {
-            return await driverLogic.GetDriverStatus(driverEmail);
+            return await driverLogic.GetDriverStatus(id);
         }
 
-        public async Task<bool> UpdateDriverStatus(string driverEmail, DriverStatus status)
+        public async Task<bool> UpdateDriverStatus(Guid id, DriverStatus status)
         {
-            return await driverLogic.UpdateDriverStatus(driverEmail, status);
+            return await driverLogic.UpdateDriverStatus(id, status);
         }
 
         public async Task<IEnumerable<Driver>> ListAllDrivers()
@@ -68,7 +68,7 @@ namespace BussinesLogic
 
         #region AuthMethods
 
-        public async Task<Tuple<bool, UserType>> Login(LoginData loginData)
+        public async Task<LoginResponse> Login(LoginData loginData)
         {
             return await authLogic.Login(loginData);
         }
@@ -78,14 +78,14 @@ namespace BussinesLogic
             return await authLogic.Register(userProfile);
         }
 
-        public async Task<UserProfile> GetUserProfile(string userEmail, UserType userType)
+        public async Task<UserProfile> GetUserProfile(Guid id)
         {
-            return await authLogic.GetUserProfile(userEmail, userType);
+            return await authLogic.GetUserProfile(id);
         }
 
-        public async Task<UserProfile> UpdateUserProfile(UpdateUserProfileRequest updateUserProfileRequest, string userEmail, UserType userType)
+        public async Task<UserProfile> UpdateUserProfile(UpdateUserProfileRequest updateUserProfileRequest, Guid id)
         {
-            return await authLogic.UpdateUserProfile(updateUserProfileRequest, userEmail, userType);
+            return await authLogic.UpdateUserProfile(updateUserProfileRequest, id);
         }
 
         #endregion
@@ -127,14 +127,14 @@ namespace BussinesLogic
             return await rideLogic.EstimateRide(request);
         }
 
-        public async Task<Ride> CreateRide(CreateRideRequest request, string clientEmail)
+        public async Task<Ride> CreateRide(CreateRideRequest request, Guid clientId)
         {
-            return await rideLogic.CreateRide(request, clientEmail);
+            return await rideLogic.CreateRide(request, clientId);
         }
 
-        public async Task<Ride> UpdateRide(UpdateRideRequest request, string driverEmail)
+        public async Task<Ride> UpdateRide(UpdateRideRequest request, Guid driverId)
         {
-            return await rideLogic.UpdateRide(request, driverEmail);
+            return await rideLogic.UpdateRide(request, driverId);
         }
 
         public async Task<IEnumerable<Ride>> GetNewRides()
@@ -142,9 +142,9 @@ namespace BussinesLogic
             return await rideLogic.GetNewRides();
         }
 
-        public async Task<IEnumerable<Ride>> GetUsersRides(string userEmail, UserType userType)
+        public async Task<IEnumerable<Ride>> GetUsersRides(Guid userId, UserType userType)
         {
-            return await rideLogic.GetUsersRides(userEmail, userType);
+            return await rideLogic.GetUsersRides(userId, userType);
         }
 
         public async Task<IEnumerable<Ride>> GetAllRides()
@@ -152,9 +152,9 @@ namespace BussinesLogic
             return await rideLogic.GetAllRides();
         }
 
-        public async Task<Ride> GetRideStatus(string clientEmail, long rideCreatedAtTimestamp)
+        public async Task<Ride> GetRideStatus(Guid rideId)
         {
-            return await rideLogic.GetRideStatus(clientEmail, rideCreatedAtTimestamp);
+            return await rideLogic.GetRideStatus(rideId);
         }
         #endregion
 
@@ -174,9 +174,9 @@ namespace BussinesLogic
             return await ratingLogic.RateDriver(driverRating);
         }
 
-        public async Task<float> GetAverageRatingForDriver(string driverEmail)
+        public async Task<float> GetAverageRatingForDriver(Guid driverId)
         {
-            return await ratingLogic.GetAverageRatingForDriver(driverEmail);
+            return await ratingLogic.GetAverageRatingForDriver(driverId);
         }
 
         #endregion

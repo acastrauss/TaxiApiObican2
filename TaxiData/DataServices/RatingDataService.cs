@@ -27,38 +27,5 @@ namespace TaxiData.DataServices
 
             return newRating;
         }
-
-        public async Task<float> GetAverageRatingForDriver(Guid driverId)
-        {
-            throw new NotImplementedException();
-            var dict = await GetReliableDictionary();
-            using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
-            
-            var collectionEnum = await dict.CreateEnumerableAsync(txWrapper.transaction);
-            var asyncEnum = collectionEnum.GetAsyncEnumerator();
-
-            float sum = 0.0f;
-            int cnt = 0;
-
-            while (await asyncEnum.MoveNextAsync(default))
-            {
-                var ratingEntity = asyncEnum.Current.Value;
-                if (ratingEntity != null)
-                {
-                    //if (ratingEntity.Dri == id)
-                    //{
-                    //    cnt += 1;
-                    //    sum += ratingEntity.Value;
-                    //}
-                }
-            }
-
-            if (cnt == 0)
-            {
-                return 0;
-            }
-
-            return sum / cnt;
-        }
     }
 }

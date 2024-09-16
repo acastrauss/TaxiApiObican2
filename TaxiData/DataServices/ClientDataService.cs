@@ -1,5 +1,4 @@
-﻿using AzureInterface.Entities;
-using Contracts.Database;
+﻿using Contracts.Database;
 using DatabaseAccess.Entities;
 using Microsoft.ServiceFabric.Data;
 using Models.UserTypes;
@@ -23,7 +22,7 @@ namespace TaxiData.DataServices
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
             var dictKey = $"{client.ClientId}";
             var created = await dict.AddOrUpdateAsync(txWrapper.transaction, dictKey, client, (key, value) => value);
-            return created;
+            return created != null;
         }
     }
 }

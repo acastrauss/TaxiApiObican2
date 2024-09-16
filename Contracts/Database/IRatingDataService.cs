@@ -15,7 +15,5 @@ namespace Contracts.Database
         [OperationContract]
         Task<RideRating> RateDriver(RideRating driverRating);
 
-        [OperationContract]
-        Task<float> GetAverageRatingForDriver(Guid driverId);
     }
 }

@@ -1,8 +1,4 @@
-﻿using Azure.Data.Tables;
-using AzureInterface;
-using AzureInterface.DTO;
-using AzureInterface.Entities;
-using Contracts.SQLDB;
+﻿using Contracts.SQLDB;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Models;

@@ -10,7 +10,6 @@ using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Models.Auth;
-using AzureInterface.DTO;
 using TaxiData.DataImplementations;
 using Models.UserTypes;
 using Models.Ride;
@@ -227,7 +226,7 @@ namespace TaxiData
 
         public async Task<float> GetAverageRatingForDriver(Guid driverId)
         {
-            return await dataServiceFactory.DriverRatingDataService.GetAverageRatingForDriver(driverId);
+            return await dataServiceFactory.DriverDataService.GetAverageRatingForDriver(driverId);
         }
 
 

@@ -93,14 +93,14 @@ namespace TaxiWeb.Controllers
             {
                 return Unauthorized();
             }
-
+            driverRating.Id = new Guid();
             return Ok(await authService.RateDriver(driverRating));
         }
 
         [HttpPost]
         [Authorize]
-        [Route("avg-rating-driver")]
-        public async Task<IActionResult> AverageRatingDriver([FromBody] DriverEmail driverEmail)
+        [Route("avg-rating-driver/{driverId}")]
+        public async Task<IActionResult> AverageRatingDriver(Guid driverId)
         {
             bool userCanAccessResource = requestAuth.DoesUserHaveRightsToAccessResource(HttpContext, new UserType[] { UserType.ADMIN });
             var userId = requestAuth.GetUserIdFromContext(HttpContext);
@@ -110,7 +110,7 @@ namespace TaxiWeb.Controllers
                 return Unauthorized();
             }
 
-            return Ok(await authService.GetAverageRatingForDriver((Guid)userId));
+            return Ok(await authService.GetAverageRatingForDriver(driverId));
         }
     }
 }

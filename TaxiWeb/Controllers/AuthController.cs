@@ -50,7 +50,7 @@ namespace TaxiWeb.Controllers
                 return BadRequest("Invalid JWT");
             }
 
-            return Ok(await authService.GetUserProfile((Guid)userId);
+            return Ok(await authService.GetUserProfile((Guid)userId));
         }
 
         [HttpPatch]
@@ -65,7 +65,7 @@ namespace TaxiWeb.Controllers
                 return BadRequest("Invalid JWT");
             }
 
-            return Ok(await authService.UpdateUserProfile(updateProfileRequest, userId));
+            return Ok(await authService.UpdateUserProfile(updateProfileRequest, (Guid)userId));
         }
 
         // POST api/<AuthController>/register

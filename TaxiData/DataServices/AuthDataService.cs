@@ -1,5 +1,4 @@
-﻿using AzureInterface.Entities;
-using DatabaseAccess.Entities;
+﻿using DatabaseAccess.Entities;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Models.Auth;

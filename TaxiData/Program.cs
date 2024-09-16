@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Fabric.Management.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
-using AzureInterface.DTO;
 using DatabaseAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.ServiceFabric.Services.Runtime;
