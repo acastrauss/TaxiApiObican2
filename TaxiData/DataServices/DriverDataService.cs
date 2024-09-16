@@ -16,11 +16,9 @@ namespace TaxiData.DataServices
     internal class DriverDataService : BaseDataService<Models.UserTypes.Driver, AzureInterface.Entities.Driver>, Contracts.Database.IDriverDataService
     {
         public DriverDataService(
-            AzureTableCRUD<AzureInterface.Entities.Driver> storageWrapper, 
-            IDTOConverter<AzureInterface.Entities.Driver, Models.UserTypes.Driver> converter, 
             Synchronizer<AzureInterface.Entities.Driver, Models.UserTypes.Driver> synchronizer,
             IReliableStateManager stateManager
-        ) : base(storageWrapper, converter, synchronizer, stateManager)
+        ) : base(synchronizer, stateManager)
         {}
 
         public async Task<DriverStatus> GetDriverStatus(Guid id)
@@ -80,7 +78,7 @@ namespace TaxiData.DataServices
         {
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
-            var dictKey = $"{driver.Id}";
+            var dictKey = $"{driver.DriverId}";
             var created = await dict.AddOrUpdateAsync(txWrapper.transaction, dictKey, driver, (key, value) => value);
             return created != null;
         }

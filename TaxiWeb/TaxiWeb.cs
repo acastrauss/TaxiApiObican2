@@ -96,13 +96,13 @@ namespace TaxiWeb
 
 
 
-                        var mssqlConnectionString = builder.Configuration.GetConnectionString("SqlServer");
-                        Action<DbContextOptionsBuilder> dbOptionsBuilder = o => o
-                            .UseLazyLoadingProxies()
-                            .UseSqlServer(mssqlConnectionString);
-                        builder.Services.AddDbContext<TaxiDBContext>(dbOptionsBuilder);
-                        var dataContext = builder.Services.BuildServiceProvider().GetRequiredService<TaxiDBContext>();
-                        dataContext.Database.EnsureCreated();
+                        //var mssqlConnectionString = builder.Configuration.GetConnectionString("SqlServer");
+                        //Action<DbContextOptionsBuilder> dbOptionsBuilder = o => o
+                        //    .UseLazyLoadingProxies()
+                        //    .UseSqlServer(mssqlConnectionString);
+                        //builder.Services.AddDbContext<TaxiDBContext>(dbOptionsBuilder);
+                        //var dataContext = builder.Services.BuildServiceProvider().GetRequiredService<TaxiDBContext>();
+                        //dataContext.Database.EnsureCreated();
 
                         builder.Services.AddSingleton<StatelessServiceContext>(serviceContext);
                         

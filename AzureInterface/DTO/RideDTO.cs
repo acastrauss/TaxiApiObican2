@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Contracts.SQLDB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace AzureInterface.DTO
 {
     public class RideDTO : IDTOConverter<Entities.Ride, Models.Ride.Ride>
     {
-        public Entities.Ride AppModelToAzure(Models.Ride.Ride appModel)
+        public Entities.Ride AppModelToSQL(Models.Ride.Ride appModel)
         {
             return new Entities.Ride()
             {
@@ -26,7 +27,7 @@ namespace AzureInterface.DTO
             };
         }
 
-        public Models.Ride.Ride AzureToAppModel(Entities.Ride azureModel)
+        public Models.Ride.Ride SQLToAppModel(Entities.Ride azureModel)
         {
             return new Models.Ride.Ride()
             {

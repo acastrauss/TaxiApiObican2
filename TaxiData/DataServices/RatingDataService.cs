@@ -13,13 +13,10 @@ namespace TaxiData.DataServices
     internal class RatingDataService : BaseDataService<Models.UserTypes.RideRating, AzureInterface.Entities.RideRating>, Contracts.Database.IRatingDataService
     {
         public RatingDataService(
-            AzureTableCRUD<AzureInterface.Entities.RideRating> storageWrapper, 
-            IDTOConverter<AzureInterface.Entities.RideRating, 
-            Models.UserTypes.RideRating> converter, 
             Synchronizer<AzureInterface.Entities.RideRating, 
             Models.UserTypes.RideRating> synchronizer, 
             IReliableStateManager stateManager
-        ) : base(storageWrapper, converter, synchronizer, stateManager)
+        ) : base(synchronizer, stateManager)
         {}
 
         public async Task<Models.UserTypes.RideRating> RateDriver(Models.UserTypes.RideRating driverRating)
@@ -34,6 +31,7 @@ namespace TaxiData.DataServices
 
         public async Task<float> GetAverageRatingForDriver(Guid driverId)
         {
+            throw new NotImplementedException();
             var dict = await GetReliableDictionary();
             using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
             
@@ -48,11 +46,11 @@ namespace TaxiData.DataServices
                 var ratingEntity = asyncEnum.Current.Value;
                 if (ratingEntity != null)
                 {
-                    if (ratingEntity.Id == id)
-                    {
-                        cnt += 1;
-                        sum += ratingEntity.Value;
-                    }
+                    //if (ratingEntity.Dri == id)
+                    //{
+                    //    cnt += 1;
+                    //    sum += ratingEntity.Value;
+                    //}
                 }
             }
 

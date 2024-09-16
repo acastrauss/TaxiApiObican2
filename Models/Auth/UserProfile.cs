@@ -19,6 +19,7 @@ namespace Models.Auth
     [DataContract]
     [KnownType(typeof(Driver))]
     [KnownType(typeof(Client))]
+    [KnownType(typeof(Admin))]
     public class UserProfile 
     {
         [DataMember]

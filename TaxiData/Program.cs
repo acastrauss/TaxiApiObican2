@@ -4,6 +4,8 @@ using System.Fabric.Management.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using AzureInterface.DTO;
+using DatabaseAccess.Context;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.ServiceFabric.Services.Runtime;
 
 namespace TaxiData
@@ -30,6 +32,17 @@ namespace TaxiData
                             .Settings.Sections["Database"]
                             .Parameters["AzureTableConnectionString"].Value;
 
+                        var sqlServerConnectionString = context.CodePackageActivationContext
+                            .GetConfigurationPackageObject("Config")
+                            .Settings.Sections["Database"]
+                            .Parameters["SQLServerConnectionString"].Value;
+
+                        var optionsBuilder = new DbContextOptionsBuilder<TaxiDBContext>()
+                            .UseLazyLoadingProxies()
+                            .UseSqlServer(sqlServerConnectionString);
+
+                        DBContextFactory.Instance.InitDb(optionsBuilder);
+                        
                         var userStorageWrapper = 
                             new AzureInterface.AzureTableCRUD<AzureInterface.Entities.User>(azureTableConnString, "user");
 

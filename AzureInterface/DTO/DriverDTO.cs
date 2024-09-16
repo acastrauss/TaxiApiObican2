@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Contracts.SQLDB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace AzureInterface.DTO
 {
     public class DriverDTO : IDTOConverter<Entities.Driver, Models.UserTypes.Driver>
     {
-        public Entities.Driver AppModelToAzure(Models.UserTypes.Driver appModel)
+        public Entities.Driver AppModelToSQL(Models.UserTypes.Driver appModel)
         {
             return new Entities.Driver(
                 appModel.Username, appModel.Email, appModel.Password,
@@ -17,7 +18,7 @@ namespace AzureInterface.DTO
             );
         }
 
-        public Models.UserTypes.Driver AzureToAppModel(Entities.Driver azureModel)
+        public Models.UserTypes.Driver SQLToAppModel(Entities.Driver azureModel)
         {
             return new Models.UserTypes.Driver()
             {

@@ -16,11 +16,9 @@ namespace TaxiData.DataServices
     internal class RideDataService : BaseDataService<Models.Ride.Ride, AzureInterface.Entities.Ride>, Contracts.Database.IRideDataService
     {
         public RideDataService(
-            AzureTableCRUD<AzureInterface.Entities.Ride> storageWrapper, 
-            IDTOConverter<AzureInterface.Entities.Ride, Models.Ride.Ride> converter, 
             Synchronizer<AzureInterface.Entities.Ride, Models.Ride.Ride> synchronizer, 
             IReliableStateManager stateManager) : 
-            base(storageWrapper, converter, synchronizer, stateManager)
+            base(synchronizer, stateManager)
         {}
 
         public async Task<Models.Ride.Ride> CreateRide(Models.Ride.Ride ride)

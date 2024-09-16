@@ -16,12 +16,10 @@ namespace TaxiData.DataServices
     internal class AuthDataService : BaseDataService<Models.Auth.UserProfile, AzureInterface.Entities.User>, Contracts.Database.IAuthDataService
     {
         public AuthDataService(
-            AzureTableCRUD<User> storageWrapper,
-            IDTOConverter<User, UserProfile> converter,
             Synchronizer<User, UserProfile> synchronizer,
             IReliableStateManager stateManager
         )
-            : base(storageWrapper, converter, synchronizer, stateManager)
+            : base(synchronizer, stateManager)
         {}
 
         public async Task<UserProfile> UpdateUserProfile(UpdateUserProfileRequest request, Guid id)

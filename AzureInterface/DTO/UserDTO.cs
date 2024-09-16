@@ -1,4 +1,5 @@
 ﻿using AzureInterface.Entities;
+using Contracts.SQLDB;
 using Models.Auth;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace AzureInterface.DTO
 {
     public class UserDTO : IDTOConverter<Entities.User, Models.Auth.UserProfile>
     {
-        public UserProfile AzureToAppModel(User azureModel)
+        public UserProfile SQLToAppModel(User azureModel)
         {
             return new Models.Auth.UserProfile()
             {
@@ -25,7 +26,7 @@ namespace AzureInterface.DTO
             };
         }
 
-        public User AppModelToAzure(UserProfile appModel)
+        public User AppModelToSQL(UserProfile appModel)
         {
             return new Entities.User(appModel.Username, appModel.Email, appModel.Password, appModel.Fullname, appModel.DateOfBirth, appModel.Address, appModel.Type, appModel.ImagePath);
         }

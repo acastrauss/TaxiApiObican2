@@ -17,20 +17,14 @@ namespace TaxiData.DataServices
 {
     internal abstract class BaseDataService<T1, T2> where T1 : class where T2 : class, ITableEntity
     {
-        protected AzureInterface.AzureTableCRUD<T2> storageWrapper;
-        protected IDTOConverter<T2,  T1> converter;
         protected readonly Synchronizer<T2, T1> synchronizer;
         protected readonly IReliableStateManager stateManager;
 
         public BaseDataService(
-            AzureTableCRUD<T2> storageWrapper,
-            IDTOConverter<T2, T1> converter,
             Synchronizer<T2, T1> synchronizer,
             IReliableStateManager stateManager
         )
         {
-            this.storageWrapper = storageWrapper;
-            this.converter = converter;
             this.synchronizer = synchronizer;
             this.stateManager = stateManager;
         }

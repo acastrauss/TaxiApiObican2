@@ -13,7 +13,7 @@ namespace Models.UserTypes
     {
 
         [DataMember]
-        public Guid Id { get; set; }
+        public Guid ClientId { get; set; }
 
         [DataMember]
         public List<Models.Ride.Ride> Rides { get; set; }

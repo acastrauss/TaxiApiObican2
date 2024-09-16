@@ -23,7 +23,7 @@ namespace Models.UserTypes
         public DriverStatus Status { get; set; }
 
         [DataMember]
-        public Guid Id { get; set; }
+        public Guid DriverId { get; set; }
 
         [DataMember]
         public List<Models.Ride.Ride> Rides { get; set; }

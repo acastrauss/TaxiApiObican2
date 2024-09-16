@@ -1,7 +1,4 @@
-﻿using Azure.Data.Tables;
-using AzureInterface;
-using AzureInterface.DTO;
-using AzureInterface.Entities;
+﻿using Contracts.SQLDB;
 using Microsoft.ServiceFabric.Data.Collections;
 using System;
 using System.Collections.Generic;
@@ -11,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace TaxiData.DataImplementations
 {
-    internal class Synchronizer<T1, T2> where T1 : class, ITableEntity 
+    internal class Synchronizer<T1, T2> where T1 : class, BaseEntity 
     {
-        private AzureTableCRUD<T1> storageWrapper;
+        private ISQLCRUD<T1> sqlStorage;
         private string ReliableDictName;
         private IDTOConverter<T1, T2> converter;
         private Microsoft.ServiceFabric.Data.IReliableStateManager StateManager;
 
-        public Synchronizer(AzureTableCRUD<T1> storageWrapper, string realiableDictName, IDTOConverter<T1, T2> converter, Microsoft.ServiceFabric.Data.IReliableStateManager stateManager)
+        public Synchronizer(ISQLCRUD<T1> sqlStorage, string realiableDictName, IDTOConverter<T1, T2> converter, Microsoft.ServiceFabric.Data.IReliableStateManager stateManager)
         {
-            this.storageWrapper = storageWrapper;
+            this.sqlStorage = sqlStorage;
             this.ReliableDictName = realiableDictName;
             this.converter = converter;
             this.StateManager = stateManager;
@@ -41,7 +38,7 @@ namespace TaxiData.DataImplementations
                 var entity = asyncEnum.Current.Value;
                 if(entity != null)
                 {
-                    entitiesToSync.Add(converter.AppModelToAzure(entity));
+                    entitiesToSync.Add(converter.AppModelToSQL(entity));
                 }
             }
 
@@ -49,13 +46,13 @@ namespace TaxiData.DataImplementations
 
             if (entitiesToSync.Count > 0)
             {
-                await storageWrapper.AddOrUpdateMultipleEntities(entitiesToSync);
+                await sqlStorage.AddOrUpdateMultipleEntities(entitiesToSync);
             }
         }
 
         public async Task SyncDictWithAzureTable()
         {
-            var azureTableEntities = storageWrapper.GetAllEntities();
+            var azureTableEntities = sqlStorage.GetAllEntities();
             if(azureTableEntities == null)
             {
                 return;
@@ -66,8 +63,8 @@ namespace TaxiData.DataImplementations
 
             foreach (var entity in azureTableEntities) 
             {
-                var appModel = converter.AzureToAppModel(entity);
-                var dictKey = $"{entity.PartitionKey}{entity.RowKey}";
+                var appModel = converter.SQLToAppModel(entity);
+                var dictKey = $"{entity.Id}";
                 var created = await dict.AddOrUpdateAsync(tx, dictKey, appModel, (key, value) => value);
             }
 
