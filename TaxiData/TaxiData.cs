@@ -15,6 +15,8 @@ using TaxiData.DataImplementations;
 using Models.UserTypes;
 using Models.Ride;
 using TaxiData.DataServices;
+using DatabaseAccess.CRUD;
+using DatabaseAccess.Entities;
 
 namespace TaxiData
 {
@@ -26,20 +28,18 @@ namespace TaxiData
         private readonly DataServiceFactory dataServiceFactory;
 
         public TaxiData(
-            StatefulServiceContext context,
-            AzureInterface.AzureTableCRUD<AzureInterface.Entities.User> userStorageWrapper,
-            AzureInterface.AzureTableCRUD<AzureInterface.Entities.Driver> driverStorageWrapper,
-            AzureInterface.AzureTableCRUD<AzureInterface.Entities.Ride> rideStorageWrapper,
-            AzureInterface.AzureTableCRUD<AzureInterface.Entities.RideRating> driverRatingWrapper
+            StatefulServiceContext context
         )
             : base(context)
         {
             dataServiceFactory = new DataServiceFactory(
                 StateManager,
-                userStorageWrapper,
-                driverStorageWrapper,
-                rideStorageWrapper,
-                driverRatingWrapper
+                new CRUD<UserEntity>(),
+                new CRUD<ClientEntity>(),
+                new CRUD<AdminEntity>(),
+                new CRUD<DriverEntity>(),
+                new CRUD<RideEntity>(),
+                new CRUD<RatingEntity>()
             );
         }
 

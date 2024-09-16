@@ -27,11 +27,6 @@ namespace TaxiData
                 ServiceRuntime.RegisterServiceAsync("TaxiDataType",
                     context =>
                     {
-                        var azureTableConnString = context.CodePackageActivationContext.
-                            GetConfigurationPackageObject("Config")
-                            .Settings.Sections["Database"]
-                            .Parameters["AzureTableConnectionString"].Value;
-
                         var sqlServerConnectionString = context.CodePackageActivationContext
                             .GetConfigurationPackageObject("Config")
                             .Settings.Sections["Database"]
@@ -42,21 +37,8 @@ namespace TaxiData
                             .UseSqlServer(sqlServerConnectionString);
 
                         DBContextFactory.Instance.InitDb(optionsBuilder);
-                        
-                        var userStorageWrapper = 
-                            new AzureInterface.AzureTableCRUD<AzureInterface.Entities.User>(azureTableConnString, "user");
 
-                        var driverStorageWrapper =
-                            new AzureInterface.AzureTableCRUD<AzureInterface.Entities.Driver>(azureTableConnString, "driver");
-
-                        var rideStorageWrapper =
-                            new AzureInterface.AzureTableCRUD<AzureInterface.Entities.Ride>(azureTableConnString, "ride");
-
-                        var driverRatingStorageWrapper =
-                            new AzureInterface.AzureTableCRUD<AzureInterface.Entities.RideRating>(azureTableConnString, "rating");
-
-
-                        return new TaxiData(context, userStorageWrapper, driverStorageWrapper, rideStorageWrapper, driverRatingStorageWrapper);
+                        return new TaxiData(context);
                     }
                     
                     
