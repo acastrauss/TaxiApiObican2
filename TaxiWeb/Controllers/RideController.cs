@@ -46,14 +46,16 @@ namespace TaxiWeb.Controllers
                 return Unauthorized();
             }
 
-            var userEmail = requestAuth.GetUserEmailFromContext(HttpContext);
+            var userId = requestAuth.GetUserIdFromContext(HttpContext);
 
-            if (userEmail == null)
+            if (userId == null)
             {
                 return BadRequest("Invalid JWT");
             }
 
-            var res = await authService.CreateRide(request, userEmail);
+            request.Id = new Guid();
+
+            var res = await authService.CreateRide(request, (Guid)userId);
 
             if (res == null) 
             {
@@ -76,10 +78,10 @@ namespace TaxiWeb.Controllers
                 return Unauthorized();
             }
 
-            var userEmail = requestAuth.GetUserEmailFromContext(HttpContext);
             var userType = requestAuth.GetUserTypeFromContext(HttpContext);
+            var userId = requestAuth.GetUserIdFromContext(HttpContext);
 
-            if (userEmail == null || userType == null) 
+            if (userId == null || userType == null) 
             {
                 return BadRequest("Invalid JWT");
             }
@@ -95,14 +97,14 @@ namespace TaxiWeb.Controllers
 
             if(userType == UserType.DRIVER)
             {
-                var driverStatus = await authService.GetDriverStatus(userEmail);
+                var driverStatus = await authService.GetDriverStatus((Guid)userId);
                 if (driverStatus != Models.UserTypes.DriverStatus.VERIFIED)
                 {
                     return Unauthorized($"This driver can not accept rides as he is {driverStatus}");
                 }
             }
 
-            return Ok(await authService.UpdateRide(request, userEmail));
+            return Ok(await authService.UpdateRide(request, (Guid)userId));
         }
 
         [HttpGet]
@@ -116,13 +118,14 @@ namespace TaxiWeb.Controllers
                 return Unauthorized();
             }
             
-            var userEmail = requestAuth.GetUserEmailFromContext(HttpContext);
-            if (userEmail == null)
+            var userId = requestAuth.GetUserIdFromContext(HttpContext);
+
+            if (userId == null)
             {
                 return Unauthorized("Bad user email");
             }
 
-            var driverStatus = await authService.GetDriverStatus(userEmail);
+            var driverStatus = await authService.GetDriverStatus((Guid)userId);
 
             if(driverStatus != Models.UserTypes.DriverStatus.VERIFIED)
             {
@@ -137,39 +140,39 @@ namespace TaxiWeb.Controllers
         [Route("get-user-rides")]
         public async Task<IActionResult> GetUserRides()
         {
-            var userEmail = requestAuth.GetUserEmailFromContext(HttpContext);
             var userType = requestAuth.GetUserTypeFromContext(HttpContext);
+            var userId = requestAuth.GetUserIdFromContext(HttpContext);
 
-            if (userEmail == null || userType == null)
+            if (userId == null || userType == null)
             {
                 return BadRequest("Invalid JWT");
             }
 
-            return Ok(await authService.GetUsersRides(userEmail, (UserType)userType));
+            return Ok(await authService.GetUsersRides((Guid)userId, (UserType)userType));
         }
 
         [HttpPost]
         [Authorize]
-        [Route("get-ride")]
-        public async Task<IActionResult> GetRideStatus([FromBody] GetRideStatusRequest getRideStatusRequest)
+        [Route("get-ride/{rideId}")]
+        public async Task<IActionResult> GetRideStatus(Guid rideId)
         {
-            var userEmail = requestAuth.GetUserEmailFromContext(HttpContext);
             var userType = requestAuth.GetUserTypeFromContext(HttpContext);
+            var userId = requestAuth.GetUserIdFromContext(HttpContext);
 
-            if (userEmail == null || userType == null)
+            if (userId == null || userType == null)
             {
                 return BadRequest("Invalid JWT");
             }
 
-            var ride = await authService.GetRideStatus(getRideStatusRequest.ClientEmail, getRideStatusRequest.RideCreatedAtTimestamp);
+            var ride = await authService.GetRideStatus(rideId);
 
             if(ride == null)
             {
                 return BadRequest("Failed to get ride with those parameters");
             }
 
-            var userIsDriverForRide = userType == UserType.DRIVER && userEmail.Equals(ride.DriverEmail);
-            var userIsClientForRide = userType == UserType.CLIENT && userEmail.Equals(ride.ClientEmail);
+            var userIsDriverForRide = userType == UserType.DRIVER && userId.Equals(ride.DriverId);
+            var userIsClientForRide = userType == UserType.CLIENT && userId.Equals(ride.ClientId);
             var userIsAdmin = userType == UserType.ADMIN;
 
             if(!userIsClientForRide && !userIsDriverForRide && !userIsAdmin)

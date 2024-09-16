@@ -8,7 +8,6 @@ namespace Models.UserTypes
 {
     public class UpdateDriverStatusData
     {
-        public Guid DriverId { get; set; }
         public DriverStatus Status { get; set; }
     }
 }

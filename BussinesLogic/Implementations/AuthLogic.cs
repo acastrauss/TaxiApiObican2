@@ -54,7 +54,7 @@ namespace BussinesLogic.Implementations
             var userExists = false;
             foreach (UserType type in Enum.GetValues(typeof(UserType)))
             {
-                userExists |= await dbService.ExistsOnlyEmail(userProfile.Email);
+                userExists |= await dbService.ExistsOnlyEmail(userProfile.Email) != null;
             }
 
             if (userExists)
@@ -66,6 +66,10 @@ namespace BussinesLogic.Implementations
             {
                 var newDriver = new Models.UserTypes.Driver(userProfile, Models.UserTypes.DriverStatus.NOT_VERIFIED);
                 return await dbService.CreateDriver(newDriver);
+            }
+            else if (userProfile.Type == UserType.CLIENT) 
+            {
+                return await dbService.CreateClient(new Models.UserTypes.Client(userProfile));
             }
 
             return await dbService.CreateUser(userProfile);

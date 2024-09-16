@@ -26,32 +26,34 @@ namespace TaxiWeb.Controllers
         [HttpPost]
         [Authorize]
         [Route("driver-status")]
-        public async Task<IActionResult> GetDriverStatus([FromBody] DriverEmail driverEmail)
+        public async Task<IActionResult> GetDriverStatus()
         {
             bool userCanAccessResource = requestAuth.DoesUserHaveRightsToAccessResource(HttpContext, new UserType[] { UserType.ADMIN, UserType.DRIVER });
-            if (!userCanAccessResource)
+            var userId = requestAuth.GetUserIdFromContext(HttpContext);
+            if (!userCanAccessResource || userId == null)
             {
                 return Unauthorized();
             }
 
-            var driverStatus = await authService.GetDriverStatus(driverEmail.Email);
+            var driverStatus = await authService.GetDriverStatus((Guid)userId);
 
             return Ok(driverStatus);
         }
 
         [HttpPatch]
-        // TO DO: Change to patch
         [Authorize]
         [Route("driver-status")]
         public async Task<IActionResult> UpdateDriverStatus([FromBody] UpdateDriverStatusData updateData)
         {
             bool userCanAccessResource = requestAuth.DoesUserHaveRightsToAccessResource(HttpContext, new UserType[] { UserType.ADMIN });
-            if (!userCanAccessResource)
+            var userId = requestAuth.GetUserIdFromContext(HttpContext);
+
+            if (!userCanAccessResource || userId == null)
             {
                 return Unauthorized();
             }
 
-            var result = await authService.UpdateDriverStatus(updateData.Email, updateData.Status);
+            var result = await authService.UpdateDriverStatus((Guid)userId, updateData.Status);
 
             if (result)
             {
@@ -101,12 +103,14 @@ namespace TaxiWeb.Controllers
         public async Task<IActionResult> AverageRatingDriver([FromBody] DriverEmail driverEmail)
         {
             bool userCanAccessResource = requestAuth.DoesUserHaveRightsToAccessResource(HttpContext, new UserType[] { UserType.ADMIN });
-            if (!userCanAccessResource)
+            var userId = requestAuth.GetUserIdFromContext(HttpContext);
+
+            if (!userCanAccessResource || userId == null)
             {
                 return Unauthorized();
             }
 
-            return Ok(await authService.GetAverageRatingForDriver(driverEmail.Email));
+            return Ok(await authService.GetAverageRatingForDriver((Guid)userId));
         }
     }
 }

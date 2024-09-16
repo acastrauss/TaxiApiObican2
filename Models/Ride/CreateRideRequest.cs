@@ -13,6 +13,9 @@ namespace Models.Ride
     public class CreateRideRequest
     {
         [DataMember]
+        public Guid Id { get; set; }  
+
+        [DataMember]
         [Required]
         [MinLength(3)]
         public string StartAddress { get; set; }

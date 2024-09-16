@@ -54,12 +54,12 @@ namespace TaxiData
             return await dataServiceFactory.AuthDataService.GetUserProfile(id);
         }
 
-        public async Task<bool> ExistsWithPwd(string email, string password)
+        public async Task<UserProfile> ExistsWithPwd(string email, string password)
         {
             return await dataServiceFactory.AuthDataService.ExistsWithPwd(email, password);
         }
 
-        public async Task<bool> ExistsOnlyEmail(string email)
+        public async Task<UserProfile> ExistsOnlyEmail(string email)
         {
             return await dataServiceFactory.AuthDataService.ExistsOnlyEmail(email);
         }
@@ -76,6 +76,16 @@ namespace TaxiData
                 userCreated = await dataServiceFactory.DriverDataService.Create(newDriver);
             }
 
+            return userCreated;
+        }
+
+        public async Task<bool> CreateClient(Client client)
+        {
+            var userCreated = await dataServiceFactory.AuthDataService.Create(client);
+            if (userCreated) 
+            {
+                userCreated = await dataServiceFactory.ClientDataService.CreateClient(client);
+            }
             return userCreated;
         }
 
@@ -219,6 +229,7 @@ namespace TaxiData
         {
             return await dataServiceFactory.DriverRatingDataService.GetAverageRatingForDriver(driverId);
         }
+
 
         #endregion
     }
