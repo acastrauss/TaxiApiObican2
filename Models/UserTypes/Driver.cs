@@ -25,13 +25,11 @@ namespace Models.UserTypes
         [DataMember]
         public Guid DriverId { get; set; }
 
-        [DataMember]
-        public List<Models.Ride.Ride> Rides { get; set; }
-
         public Driver() { }
 
         public Driver(UserProfile user, DriverStatus status)
         {
+            this.Id = user.Id;
             this.Address = user.Address;
             this.Password = user.Password;
             this.Email = user.Email;
@@ -41,6 +39,11 @@ namespace Models.UserTypes
             this.Fullname = user.Fullname;
             this.Type = UserType.DRIVER;
             this.ImagePath = user.ImagePath;
+        }
+
+        public override Guid GetDictKey()
+        {
+            return DriverId;
         }
     }
 }

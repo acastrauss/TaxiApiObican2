@@ -50,13 +50,20 @@ namespace DatabaseAccess.Context
                 .HasOne(a => a.Driver)
                 .WithMany(d => d.Rides)
                 .HasForeignKey(a => a.DriverId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.NoAction)
+                .IsRequired(false);
+
+            modelBuilder.Entity<RideEntity>()
+                .Property(r => r.EstimatedRideEnd)
+                .IsRequired(false);
 
             modelBuilder.Entity<RatingEntity>()
                 .HasOne(a => a.Ride)
                 .WithOne()
                 .HasForeignKey<RatingEntity>(a => a.RideId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.NoAction)
+                .IsRequired(false);
+
         }
     }
 }

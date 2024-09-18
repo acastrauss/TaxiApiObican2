@@ -2,6 +2,7 @@
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Models.Auth;
+using Models.UserTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,6 +85,12 @@ namespace TaxiData.DataServices
                 {
                     if (user.Email == email && user.Password == password)
                     {
+                        var currUser = await GetConcreteUserTypeInstance<Client>(user.Id);
+                        if (currUser != null) return currUser;
+                        currUser = await GetConcreteUserTypeInstance<Driver>(user.Id);
+                        if (currUser != null) return currUser;
+                        currUser = await GetConcreteUserTypeInstance<Admin>(user.Id);
+                        if (currUser != null) return currUser;
                         return user;
                     } 
                 }
@@ -106,11 +113,38 @@ namespace TaxiData.DataServices
                 {
                     if (user.Email == email)
                     {
+                        var currUser = await GetConcreteUserTypeInstance<Client>(user.Id);
+                        if (currUser != null) return currUser;
+                        currUser = await GetConcreteUserTypeInstance<Driver>(user.Id);
+                        if (currUser != null) return currUser;
+                        currUser = await GetConcreteUserTypeInstance<Admin>(user.Id);
+                        if (currUser != null) return currUser;
                         return user;
                     }
                 }
             }
 
+            return null;
+        }
+
+        private async Task<UserProfile> GetConcreteUserTypeInstance<T>(Guid id) where T : UserProfile
+        {
+            var dict = await stateManager.GetOrAddAsync<IReliableDictionary<string, T>>(typeof(T).Name);
+            using var txWrapper = new StateManagerTransactionWrapper(stateManager.CreateTransaction());
+            var collectionEnum = await dict.CreateEnumerableAsync(txWrapper.transaction);
+            var asyncEnum = collectionEnum.GetAsyncEnumerator();
+
+            while (await asyncEnum.MoveNextAsync(default))
+            {
+                var user = asyncEnum.Current.Value;
+                if (user != null)
+                {
+                    if (user.Id == id)
+                    {
+                        return user as T;
+                    }
+                }
+            }
             return null;
         }
 

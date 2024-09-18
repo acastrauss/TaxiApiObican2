@@ -13,5 +13,10 @@ namespace Models.UserTypes
     {
         [DataMember]
         public Guid AdminId { get; set; }
+
+        public override Guid GetDictKey()
+        {
+            return AdminId;
+        }
     }
 }

@@ -24,6 +24,7 @@ namespace BussinesLogic.Implementations
 
             var newRide = new Models.Ride.Ride()
             {
+                Id = request.Id,
                 ClientId = clientId,
                 CreatedAtTimestamp = unixTimestamp,
                 DriverId = null,
@@ -80,7 +81,7 @@ namespace BussinesLogic.Implementations
                             var rides = await dbService.GetRides(new QueryRideParams()
                             {
                                 ClientId = userId,
-                                Status = RideStatus.COMPLETED
+                                Status = status
                             });
                             clientRides.AddRange(rides);
                         }

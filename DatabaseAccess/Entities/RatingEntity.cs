@@ -19,6 +19,5 @@ namespace DatabaseAccess.Entities
 
         public Guid RideId { get; set; }
         public virtual RideEntity Ride { get; set; }
-
     }
 }

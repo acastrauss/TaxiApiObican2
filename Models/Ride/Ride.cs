@@ -16,7 +16,7 @@ namespace Models.Ride
     }
 
     [DataContract]
-    public class Ride
+    public class Ride : IBaseDictEntry
     {
         [DataMember]
         public Guid Id { get; set; }
@@ -39,5 +39,9 @@ namespace Models.Ride
         [DataMember]
         public DateTime? EstimatedRideEnd { get; set; }
 
+        public Guid GetDictKey()
+        {
+            return Id;
+        }
     }
 }

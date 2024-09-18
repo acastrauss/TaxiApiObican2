@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Contracts.SQLDB
 {
-    public interface ISQLCRUD<T> where T : class, BaseEntity
+    public interface ISQLCRUD<TDB, TM> where TDB : class, BaseEntity
     {
-        Task AddOrUpdateMultipleEntities(IEnumerable<T> entities);
-        IEnumerable<T> GetAllEntities();
+        Task AddOrUpdateMultipleEntities(IEnumerable<TDB> entities);
+        IEnumerable<TM> GetAllEntities();
     }
 }

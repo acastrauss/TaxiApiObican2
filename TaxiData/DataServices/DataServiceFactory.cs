@@ -4,6 +4,8 @@ using DatabaseAccess.Entities;
 using Microsoft.ServiceFabric.Data;
 using Models;
 using Models.Auth;
+using Models.Ride;
+using Models.UserTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +25,12 @@ namespace TaxiData.DataServices
 
         public DataServiceFactory(
             IReliableStateManager stateManager,
-            ISQLCRUD<UserEntity> userSql,
-            ISQLCRUD<ClientEntity> clientSql,
-            ISQLCRUD<AdminEntity> adminSql,
-            ISQLCRUD<DriverEntity> driverSql,
-            ISQLCRUD<RideEntity> rideSql,
-            ISQLCRUD<RatingEntity> ratingSql
+            ISQLCRUD<UserEntity, UserProfile> userSql,
+            ISQLCRUD<ClientEntity, Client> clientSql,
+            ISQLCRUD<AdminEntity, Admin> adminSql,
+            ISQLCRUD<DriverEntity, Driver> driverSql,
+            ISQLCRUD<RideEntity, Ride> rideSql,
+            ISQLCRUD<RatingEntity, RideRating> ratingSql
         ) 
         {
             AuthDataService = new AuthDataService(
@@ -86,19 +88,23 @@ namespace TaxiData.DataServices
             );
         }
 
-        public async Task SyncAzureTablesWithDict()
+        public async Task SyncSQLTablesWithDict()
         {
-            await AuthDataService.SyncAzureTablesWithDict();
-            await DriverDataService.SyncAzureTablesWithDict();
-            await RideDataService.SyncAzureTablesWithDict();
-            await DriverRatingDataService.SyncAzureTablesWithDict();
+            await AuthDataService.SyncSQLTablesWithDict();
+            await DriverDataService.SyncSQLTablesWithDict();
+            await AdminDataService.SyncSQLTablesWithDict();
+            await ClientDataService.SyncSQLTablesWithDict();
+            await RideDataService.SyncSQLTablesWithDict();
+            await DriverRatingDataService.SyncSQLTablesWithDict();
         }
-        public async Task SyncDictWithAzureTable()
+        public async Task SyncDictWithSQLTable()
         {
-            await AuthDataService.SyncDictWithAzureTable();
-            await DriverDataService.SyncDictWithAzureTable();
-            await RideDataService.SyncDictWithAzureTable();
-            await DriverRatingDataService.SyncDictWithAzureTable();
+            await AuthDataService.SyncDictWithSQLTable();
+            await DriverDataService.SyncDictWithSQLTable();
+            await AdminDataService.SyncDictWithSQLTable();
+            await ClientDataService.SyncDictWithSQLTable();
+            await RideDataService.SyncDictWithSQLTable();
+            await DriverRatingDataService.SyncDictWithSQLTable();
         }
     }
 }

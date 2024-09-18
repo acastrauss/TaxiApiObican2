@@ -12,7 +12,7 @@ using TaxiData.DataImplementations;
 
 namespace TaxiData.DataServices
 {
-    internal abstract class BaseDataService<T1, T2> where T1 : class where T2 : class, BaseEntity
+    internal abstract class BaseDataService<T1, T2> where T1 : class, IBaseDictEntry where T2 : class, BaseEntity
     {
         protected readonly Synchronizer<T2, T1> synchronizer;
         protected readonly IReliableStateManager stateManager;
@@ -26,14 +26,14 @@ namespace TaxiData.DataServices
             this.stateManager = stateManager;
         }
 
-        public async Task SyncAzureTablesWithDict()
+        public async Task SyncSQLTablesWithDict()
         {
-            await synchronizer.SyncAzureTablesWithDict();
+            await synchronizer.SyncSQLTablesWithDict();
         }
 
-        public async Task SyncDictWithAzureTable()
+        public async Task SyncDictWithSQLTable()
         {
-            await synchronizer.SyncDictWithAzureTable();
+            await synchronizer.SyncDictWithSQLTable();
         }
         protected async Task<IReliableDictionary<string, T1>> GetReliableDictionary()
         {

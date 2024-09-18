@@ -16,6 +16,7 @@ using Models.Ride;
 using TaxiData.DataServices;
 using DatabaseAccess.CRUD;
 using DatabaseAccess.Entities;
+using DatabaseAccess.DTO;
 
 namespace TaxiData
 {
@@ -31,14 +32,20 @@ namespace TaxiData
         )
             : base(context)
         {
+            var userDto = new UserDTO();
+
             dataServiceFactory = new DataServiceFactory(
                 StateManager,
-                new CRUD<UserEntity>(),
-                new CRUD<ClientEntity>(),
-                new CRUD<AdminEntity>(),
-                new CRUD<DriverEntity>(),
-                new CRUD<RideEntity>(),
-                new CRUD<RatingEntity>()
+                new CRUD<UserEntity, UserProfile>(
+                    new UserDTO()
+                ),
+                new CRUD<ClientEntity, Client>(
+                    new ClientDTO()
+                    ),
+                new CRUD<AdminEntity, Admin>(new AdminDTO()),
+                new CRUD<DriverEntity, Driver>(new DriverDTO()),
+                new CRUD<RideEntity, Ride>(new RideDTO()),
+                new CRUD<RatingEntity, RideRating>(new RatingDTO())
             );
         }
 
@@ -92,9 +99,9 @@ namespace TaxiData
 
         #region SyncMethods
 
-        private async Task SyncAzureTablesWithDict()
+        private async Task SyncSQLTablesWithDict()
         {
-            await dataServiceFactory.SyncAzureTablesWithDict();
+            await dataServiceFactory.SyncSQLTablesWithDict();
         }
 
         private async Task RunPeriodicalUpdate(CancellationToken cancellationToken)
@@ -106,15 +113,15 @@ namespace TaxiData
                     break;
                 }
 
-                await SyncAzureTablesWithDict();
+                await SyncSQLTablesWithDict();
 
                 await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
             }
         }
 
-        private async Task SyncDictWithAzureTable()
+        private async Task SyncDictWithSQLTable()
         {
-            await dataServiceFactory.SyncDictWithAzureTable();
+            await dataServiceFactory.SyncDictWithSQLTable();
         }
 
         #endregion
@@ -141,7 +148,7 @@ namespace TaxiData
         {
             var myDictionary = await this.StateManager.GetOrAddAsync<IReliableDictionary<string, long>>("myDictionary");
 
-            await SyncDictWithAzureTable();
+            await SyncDictWithSQLTable();
 
             int syncCnt = 0;
 
@@ -166,7 +173,7 @@ namespace TaxiData
 
                 if(syncCnt++ % 20 == 0)
                 {
-                    await SyncAzureTablesWithDict();
+                    await SyncSQLTablesWithDict();
                     syncCnt = 0;
                 }
 

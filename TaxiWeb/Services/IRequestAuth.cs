@@ -8,5 +8,6 @@ namespace TaxiWeb.Services
         string? GetUserEmailFromContext(HttpContext httpContext); 
         UserType? GetUserTypeFromContext(HttpContext httpContext);
         Guid? GetUserIdFromContext(HttpContext httpContext);
+        Guid? GetRoleIdFromContext(HttpContext httpContext);
     }
 }

@@ -16,7 +16,7 @@ namespace DatabaseAccess.DTO
             return new DriverEntity()
             {
                 Id = appModel.DriverId,
-                UserId = appModel.Id,
+                UserId = (Guid)appModel.Id,
                 Status = (int)appModel.Status,
             };
         }

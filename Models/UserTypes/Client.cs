@@ -15,22 +15,24 @@ namespace Models.UserTypes
         [DataMember]
         public Guid ClientId { get; set; }
 
-        [DataMember]
-        public List<Models.Ride.Ride> Rides { get; set; }
-
         public Client() { }
-
 
         public Client(UserProfile user)
         {
+            this.Id = user.Id;
             this.Address = user.Address;
             this.Password = user.Password;
             this.Email = user.Email;
             this.Username = user.Username;
             this.DateOfBirth = user.DateOfBirth;
             this.Fullname = user.Fullname;
-            this.Type = UserType.DRIVER;
+            this.Type = UserType.CLIENT;
             this.ImagePath = user.ImagePath;
+        }
+
+        public override Guid GetDictKey()
+        {
+            return ClientId;
         }
     }
 }

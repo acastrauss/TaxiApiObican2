@@ -19,7 +19,7 @@ namespace DatabaseAccess.DTO
                 DateOfBirth = appModel.DateOfBirth,
                 Email = appModel.Email,
                 Fullname = appModel.Fullname,
-                Id = appModel.Id,
+                Id = (Guid)appModel.Id,
                 ImagePath = appModel.ImagePath,
                 Password = appModel.Password,
                 Type = (int)appModel.Type,

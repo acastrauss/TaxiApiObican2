@@ -74,14 +74,21 @@ namespace TaxiWeb.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] UserProfile userProfile)
         {
-            userProfile.Id = new Guid();
-            var res = await authService.Register(userProfile);
-            if (res)
+            try
             {
-                return new ObjectResult(res) { StatusCode = StatusCodes.Status201Created };
-            }
+                userProfile.Id = Guid.NewGuid();
+                var res = await authService.Register(userProfile);
+                if (res)
+                {
+                    return new ObjectResult(res) { StatusCode = StatusCodes.Status201Created };
+                }
 
-            return new ObjectResult(res) { StatusCode = StatusCodes.Status400BadRequest };
+                return new ObjectResult(res) { StatusCode = StatusCodes.Status400BadRequest };
+            }
+            catch (Exception e)
+            {
+                return new ObjectResult(e) { StatusCode = StatusCodes.Status500InternalServerError };
+            }
         }
 
         [HttpPost]
@@ -104,7 +111,8 @@ namespace TaxiWeb.Controllers
                 {
                     new Claim(ClaimTypes.Email, loginData.Email), 
                     new Claim(ClaimTypes.Role, existingUser.userType.ToString()),
-                    new Claim(ClaimTypes.NameIdentifier, existingUser.userId.ToString())
+                    new Claim(ClaimTypes.NameIdentifier, existingUser.userId.ToString()),
+                    new Claim(ClaimTypes.GroupSid, existingUser.roleId.ToString())
                 }),
                 Expires = DateTime.Now.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),

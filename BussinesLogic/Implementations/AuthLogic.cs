@@ -1,4 +1,5 @@
 ﻿using Models.Auth;
+using Models.UserTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,11 +39,24 @@ namespace BussinesLogic.Implementations
 
                 if (existingUser != null)
                 {
-                    return new LoginResponse()
+                    var res = new LoginResponse()
                     {
-                        userId = existingUser.Id,
+                        userId = (Guid)existingUser.Id,
                         userType = existingUser.Type
                     };
+                    if (existingUser.Type == UserType.ADMIN)
+                    {
+                        res.roleId = ((Admin)existingUser).AdminId;  
+                    }
+                    else if (existingUser.Type == UserType.CLIENT)
+                    {
+                        res.roleId = ((Client)existingUser).ClientId;
+                    }
+                    else if (existingUser.Type == UserType.DRIVER)
+                    {
+                        res.roleId = ((Driver)existingUser).DriverId;
+                    }
+                    return res; 
                 }
             }
 
@@ -65,13 +79,13 @@ namespace BussinesLogic.Implementations
             if (userProfile.Type == UserType.DRIVER)
             {
                 var newDriver = new Models.UserTypes.Driver(userProfile, Models.UserTypes.DriverStatus.NOT_VERIFIED);
-                newDriver.DriverId = new Guid();
+                newDriver.DriverId = Guid.NewGuid();
                 return await dbService.CreateDriver(newDriver);
             }
             else if (userProfile.Type == UserType.CLIENT) 
             {
                 var newClient = new Models.UserTypes.Client(userProfile);
-                newClient.ClientId = new Guid();
+                newClient.ClientId = Guid.NewGuid();
                 return await dbService.CreateClient(newClient);
             }
 

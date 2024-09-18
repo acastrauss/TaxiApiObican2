@@ -16,7 +16,7 @@ namespace DatabaseAccess.DTO
             return new AdminEntity()
             {
                 Id = appModel.AdminId,
-                UserId = appModel.Id,
+                UserId = (Guid)appModel.Id,
             };
         }
 

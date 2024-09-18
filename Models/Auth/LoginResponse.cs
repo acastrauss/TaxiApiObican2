@@ -14,6 +14,9 @@ namespace Models.Auth
         public Guid userId { get; set; }
 
         [DataMember]
+        public Guid roleId { get; set; }
+
+        [DataMember]
         public UserType userType { get; set; }
     }
 }

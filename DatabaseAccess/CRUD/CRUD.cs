@@ -8,31 +8,48 @@ using System.Threading.Tasks;
 
 namespace DatabaseAccess.CRUD
 {
-    public class CRUD<T> : ISQLCRUD<T> where T : class, BaseEntity
+    public class CRUD<TDB, TM> : ISQLCRUD<TDB, TM> where TDB : class, BaseEntity
     {
-        public async Task AddOrUpdateMultipleEntities(IEnumerable<T> entities)
+        private readonly IDTOConverter<TDB, TM> converter;
+
+        public CRUD(IDTOConverter<TDB, TM> converter)
+        {
+            this.converter = converter;
+        }
+
+        public async Task AddOrUpdateMultipleEntities(IEnumerable<TDB> entities)
         {
             using var dbCtx = DBContextFactory.Instance.GetDBContext();
 
             foreach (var entity in entities)
             {
-                if (dbCtx.Set<T>().Any(e => e.Id == entity.Id))
+                if (dbCtx.Set<TDB>().Any(e => e.Id == entity.Id))
                 {
-                    dbCtx.Set<T>().Update(entity);
+                    dbCtx.Set<TDB>().Update(entity);
                 }
                 else
                 {
-                    dbCtx.Set<T>().Add(entity);
+                    dbCtx.Set<TDB>().Add(entity);
                 }
             }
 
-            await dbCtx.SaveChangesAsync();
+            try
+            {
+                await dbCtx.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+
         }
 
-        public IEnumerable<T> GetAllEntities()
+        public IEnumerable<TM> GetAllEntities()
         {
             using var dbCtx = DBContextFactory.Instance.GetDBContext();
-            return dbCtx.Set<T>().ToList();
+            var entities = dbCtx.Set<TDB>().ToList();
+            var converted = entities.Select(e => converter.SQLToAppModel(e)).ToList();
+            return converted;
         }
     }
 }

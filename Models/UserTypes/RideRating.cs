@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Models.UserTypes
 {
     [DataContract]
-    public class RideRating
+    public class RideRating : IBaseDictEntry
     {
         [DataMember]
         public Guid Id { get; set; }
@@ -19,5 +19,10 @@ namespace Models.UserTypes
         [DataMember]
         [System.ComponentModel.DataAnnotations.Range(1, 5)]
         public int Value { get; set; }
+
+        public Guid GetDictKey()
+        {
+            return Id;
+        }
     }
 }

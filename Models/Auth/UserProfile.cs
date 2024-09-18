@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Models.Auth
@@ -20,7 +21,7 @@ namespace Models.Auth
     [KnownType(typeof(Driver))]
     [KnownType(typeof(Client))]
     [KnownType(typeof(Admin))]
-    public class UserProfile 
+    public class UserProfile : IBaseDictEntry
     {
         [DataMember]
         public Guid Id { get; set; }
@@ -62,5 +63,9 @@ namespace Models.Auth
         [DataType(DataType.ImageUrl)]
         public string ImagePath { get; set; } = string.Empty;
 
+        public virtual Guid GetDictKey()
+        {
+            return Id;
+        }
     }
 }

@@ -10,7 +10,7 @@
 	
 	<Section Name="Database">
 		<Parameter Name="SQLServerConnectionString"
-				   Value="Server=localhost,1433;Database=TaxiDB;User Id=sa;Password=$tr0ngS@P@ssw0rd02;TrustServerCertificate=True;"
+				   Value="Server=DESKTOP-86NR8TL\SQLEXPRESS;Database=TaxiDB;Trusted_Connection=True;TrustServerCertificate=True;"
 				   />
 	</Section>
 	

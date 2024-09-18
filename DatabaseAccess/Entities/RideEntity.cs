@@ -29,8 +29,7 @@ namespace DatabaseAccess.Entities
         public virtual ClientEntity Client { get; set; }
 
         public Guid? DriverId { get; set; }
-        public virtual DriverEntity Driver { get; set; }
-
-        public virtual RatingEntity Rating { get; set; }
+        public virtual DriverEntity? Driver { get; set; }
+        public virtual RatingEntity? Rating { get; set; }
     }
 }

@@ -46,15 +46,15 @@ namespace TaxiWeb.Controllers
                 return Unauthorized();
             }
 
-            var userId = requestAuth.GetUserIdFromContext(HttpContext);
+            var roleId = requestAuth.GetRoleIdFromContext(HttpContext);
 
-            if (userId == null)
+            if (roleId == null)
             {
                 return BadRequest("Invalid JWT");
             }
 
-            request.Id = new Guid();
-            var res = await authService.CreateRide(request, (Guid)userId);
+            request.Id = Guid.NewGuid();
+            var res = await authService.CreateRide(request, (Guid)roleId);
 
             if (res == null) 
             {
@@ -78,9 +78,9 @@ namespace TaxiWeb.Controllers
             }
 
             var userType = requestAuth.GetUserTypeFromContext(HttpContext);
-            var userId = requestAuth.GetUserIdFromContext(HttpContext);
+            var roleId = requestAuth.GetRoleIdFromContext(HttpContext);
 
-            if (userId == null || userType == null) 
+            if (roleId == null || userType == null) 
             {
                 return BadRequest("Invalid JWT");
             }
@@ -96,14 +96,14 @@ namespace TaxiWeb.Controllers
 
             if(userType == UserType.DRIVER)
             {
-                var driverStatus = await authService.GetDriverStatus((Guid)userId);
+                var driverStatus = await authService.GetDriverStatus((Guid)roleId);
                 if (driverStatus != Models.UserTypes.DriverStatus.VERIFIED)
                 {
                     return Unauthorized($"This driver can not accept rides as he is {driverStatus}");
                 }
             }
 
-            return Ok(await authService.UpdateRide(request, (Guid)userId));
+            return Ok(await authService.UpdateRide(request, (Guid)roleId));
         }
 
         [HttpGet]
@@ -117,14 +117,14 @@ namespace TaxiWeb.Controllers
                 return Unauthorized();
             }
             
-            var userId = requestAuth.GetUserIdFromContext(HttpContext);
+            var roleId = requestAuth.GetRoleIdFromContext(HttpContext);
 
-            if (userId == null)
+            if (roleId == null)
             {
                 return Unauthorized("Bad user email");
             }
 
-            var driverStatus = await authService.GetDriverStatus((Guid)userId);
+            var driverStatus = await authService.GetDriverStatus((Guid)roleId);
 
             if(driverStatus != Models.UserTypes.DriverStatus.VERIFIED)
             {
@@ -140,25 +140,25 @@ namespace TaxiWeb.Controllers
         public async Task<IActionResult> GetUserRides()
         {
             var userType = requestAuth.GetUserTypeFromContext(HttpContext);
-            var userId = requestAuth.GetUserIdFromContext(HttpContext);
+            var roleId = requestAuth.GetRoleIdFromContext(HttpContext);
 
-            if (userId == null || userType == null)
+            if (roleId == null || userType == null)
             {
                 return BadRequest("Invalid JWT");
             }
 
-            return Ok(await authService.GetUsersRides((Guid)userId, (UserType)userType));
+            return Ok(await authService.GetUsersRides((Guid)roleId, (UserType)userType));
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize]
         [Route("get-ride/{rideId}")]
         public async Task<IActionResult> GetRideStatus(Guid rideId)
         {
             var userType = requestAuth.GetUserTypeFromContext(HttpContext);
-            var userId = requestAuth.GetUserIdFromContext(HttpContext);
+            var roleId = requestAuth.GetRoleIdFromContext(HttpContext);
 
-            if (userId == null || userType == null)
+            if (roleId == null || userType == null)
             {
                 return BadRequest("Invalid JWT");
             }
@@ -170,8 +170,8 @@ namespace TaxiWeb.Controllers
                 return BadRequest("Failed to get ride with those parameters");
             }
 
-            var userIsDriverForRide = userType == UserType.DRIVER && userId.Equals(ride.DriverId);
-            var userIsClientForRide = userType == UserType.CLIENT && userId.Equals(ride.ClientId);
+            var userIsDriverForRide = userType == UserType.DRIVER && roleId.Equals(ride.DriverId);
+            var userIsClientForRide = userType == UserType.CLIENT && roleId.Equals(ride.ClientId);
             var userIsAdmin = userType == UserType.ADMIN;
 
             if(!userIsClientForRide && !userIsDriverForRide && !userIsAdmin)

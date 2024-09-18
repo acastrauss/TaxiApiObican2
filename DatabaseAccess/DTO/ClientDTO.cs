@@ -16,7 +16,7 @@ namespace DatabaseAccess.DTO
             return new ClientEntity()
             {
                 Id = appModel.ClientId,
-                UserId = appModel.Id,
+                UserId = (Guid)appModel.Id,
             };
         }
 

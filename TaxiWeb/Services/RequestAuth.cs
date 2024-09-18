@@ -31,6 +31,12 @@ namespace TaxiWeb.Services
             return true;
         }
 
+        public Guid? GetRoleIdFromContext(HttpContext httpContext)
+        {
+            var roleIdClaim = httpContext.User.Claims.FirstOrDefault((c) => c.Type == ClaimTypes.GroupSid);
+            return roleIdClaim != null ? Guid.Parse(roleIdClaim.Value) : null;
+        }
+
         public string? GetUserEmailFromContext(HttpContext httpContext)
         {
             var userEmailClaim = httpContext.User.Claims.FirstOrDefault((c) => c.Type == ClaimTypes.Email);
@@ -40,7 +46,7 @@ namespace TaxiWeb.Services
         public Guid? GetUserIdFromContext(HttpContext httpContext)
         {
             var userIdClaim = httpContext.User.Claims.FirstOrDefault((c) => c.Type == ClaimTypes.NameIdentifier);
-            return userIdClaim != null ? new Guid(userIdClaim.Value) : null;
+            return userIdClaim != null ? Guid.Parse(userIdClaim.Value) : null;
         }
 
         public UserType? GetUserTypeFromContext(HttpContext httpContext)

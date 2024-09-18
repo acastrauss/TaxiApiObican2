@@ -23,37 +23,36 @@ namespace TaxiWeb.Controllers
             this.requestAuth = requestAuth;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize]
-        [Route("driver-status")]
-        public async Task<IActionResult> GetDriverStatus()
+        [Route("driver-status/{driverId}")]
+        public async Task<IActionResult> GetDriverStatus(Guid driverId)
         {
             bool userCanAccessResource = requestAuth.DoesUserHaveRightsToAccessResource(HttpContext, new UserType[] { UserType.ADMIN, UserType.DRIVER });
-            var userId = requestAuth.GetUserIdFromContext(HttpContext);
-            if (!userCanAccessResource || userId == null)
+            if (!userCanAccessResource)
             {
                 return Unauthorized();
             }
 
-            var driverStatus = await authService.GetDriverStatus((Guid)userId);
+            var driverStatus = await authService.GetDriverStatus(driverId);
 
             return Ok(driverStatus);
         }
 
         [HttpPatch]
         [Authorize]
-        [Route("driver-status")]
-        public async Task<IActionResult> UpdateDriverStatus([FromBody] UpdateDriverStatusData updateData)
+        [Route("driver-status/{driverId}")]
+        public async Task<IActionResult> UpdateDriverStatus(Guid driverId, [FromBody] UpdateDriverStatusData updateData)
         {
             bool userCanAccessResource = requestAuth.DoesUserHaveRightsToAccessResource(HttpContext, new UserType[] { UserType.ADMIN });
-            var userId = requestAuth.GetUserIdFromContext(HttpContext);
+            var roleId = requestAuth.GetRoleIdFromContext(HttpContext);
 
-            if (!userCanAccessResource || userId == null)
+            if (!userCanAccessResource || roleId == null)
             {
                 return Unauthorized();
             }
 
-            var result = await authService.UpdateDriverStatus((Guid)userId, updateData.Status);
+            var result = await authService.UpdateDriverStatus(driverId, updateData.Status);
 
             if (result)
             {
@@ -93,7 +92,7 @@ namespace TaxiWeb.Controllers
             {
                 return Unauthorized();
             }
-            driverRating.Id = new Guid();
+            driverRating.Id = Guid.NewGuid();
             return Ok(await authService.RateDriver(driverRating));
         }
 
@@ -103,9 +102,9 @@ namespace TaxiWeb.Controllers
         public async Task<IActionResult> AverageRatingDriver(Guid driverId)
         {
             bool userCanAccessResource = requestAuth.DoesUserHaveRightsToAccessResource(HttpContext, new UserType[] { UserType.ADMIN });
-            var userId = requestAuth.GetUserIdFromContext(HttpContext);
+            var roleId = requestAuth.GetRoleIdFromContext(HttpContext);
 
-            if (!userCanAccessResource || userId == null)
+            if (!userCanAccessResource || roleId == null)
             {
                 return Unauthorized();
             }
