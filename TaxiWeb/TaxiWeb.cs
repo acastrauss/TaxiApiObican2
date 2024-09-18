@@ -94,16 +94,6 @@ namespace TaxiWeb
                         var azureConnString = builder.Configuration.GetSection("AzureStorage").GetValue<string>("ConnectionString");
                         builder.Services.AddSingleton<Contracts.Blob.IBlob>(new AzureInterface.AzureBlobCRUD(azureConnString, "profile-images"));
 
-
-
-                        //var mssqlConnectionString = builder.Configuration.GetConnectionString("SqlServer");
-                        //Action<DbContextOptionsBuilder> dbOptionsBuilder = o => o
-                        //    .UseLazyLoadingProxies()
-                        //    .UseSqlServer(mssqlConnectionString);
-                        //builder.Services.AddDbContext<TaxiDBContext>(dbOptionsBuilder);
-                        //var dataContext = builder.Services.BuildServiceProvider().GetRequiredService<TaxiDBContext>();
-                        //dataContext.Database.EnsureCreated();
-
                         builder.Services.AddSingleton<StatelessServiceContext>(serviceContext);
                         
                         var proxy = ServiceProxy.Create<IBussinesLogic>(new Uri("fabric:/TaxiApplication/BussinesLogic"));
@@ -131,20 +121,6 @@ namespace TaxiWeb
                                 ValidIssuer = jwtIssuer,
                                 ValidAudience = jwtAudience,
                                 IssuerSigningKey = new SymmetricSecurityKey(key),
-                            };
-
-                            x.Events = new JwtBearerEvents
-                            {
-                                OnMessageReceived = context =>
-                                {
-                                    var accessToken = context.Request.Query["access_token"];
-                                    var path = context.HttpContext.Request.Path;
-                                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chathub"))
-                                    {
-                                        context.Token = accessToken;
-                                    }
-                                    return Task.CompletedTask;
-                                }
                             };
                         });
                         
